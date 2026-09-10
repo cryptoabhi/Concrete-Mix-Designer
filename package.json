@@ -1,0 +1,14 @@
+{
+  "name": "concrete-mix-designer",
+  "version": "1.0.0",
+  "description": "Concrete Mix Designer (IS 10262) with per-user accounts and saved trial sheets.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "UNLICENSED",
+  "dependencies": {}
+}
