@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sign in — Concrete Mix Designer</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:#eef2f7;color:#17202a;font-family:Arial,Helvetica,sans-serif}
+.box{width:92%;max-width:380px;background:#fff;border-radius:8px;box-shadow:0 2px 9px #0001;padding:22px}
+h1{font-size:19px;margin:0 0 3px;color:#173b5d;text-align:center}
+p.sub{margin:0 0 18px;text-align:center;font-size:11px;color:#64748b}
+.tabs{display:flex;margin-bottom:16px;border:1px solid #cbd5e1;border-radius:6px;overflow:hidden}
+.tabs button{flex:1;border:0;background:#f1f5f9;padding:9px;font-size:12px;font-weight:700;cursor:pointer;color:#334155}
+.tabs button.active{background:#2563eb;color:#fff}
+label{font-size:11px;font-weight:700;display:block;margin:10px 0 4px}
+input{width:100%;padding:8px;border:1px solid #aebccc;border-radius:4px;font-size:13px}
+button.submit{width:100%;margin-top:16px;border:0;border-radius:4px;padding:10px;color:#fff;font-weight:700;font-size:13px;cursor:pointer;background:#2563eb}
+button.submit:disabled{background:#93c5fd;cursor:default}
+.error{margin-top:12px;font-size:11px;background:#fef2f2;border-left:4px solid #dc2626;padding:8px;border-radius:3px;color:#991b1b;display:none}
+.hidden{display:none}
+</style>
+</head>
+<body>
+
+<div class="box">
+  <h1>Concrete Mix Designer</h1>
+  <p class="sub">IS 10262 Mix Design &amp; Trial Mix Records</p>
+
+  <div class="tabs">
+    <button id="tabLogin" class="active" onclick="showTab('login')">Sign In</button>
+    <button id="tabSignup" onclick="showTab('signup')">Create Account</button>
+  </div>
+
+  <form id="loginForm">
+    <label>Email</label>
+    <input type="email" id="loginEmail" required autocomplete="email">
+    <label>Password</label>
+    <input type="password" id="loginPassword" required autocomplete="current-password">
+    <button class="submit" type="submit">Sign In</button>
+  </form>
+
+  <form id="signupForm" class="hidden">
+    <label>Full Name</label>
+    <input type="text" id="signupName" required autocomplete="name">
+    <label>Email</label>
+    <input type="email" id="signupEmail" required autocomplete="email">
+    <label>Password (min 6 characters)</label>
+    <input type="password" id="signupPassword" required minlength="6" autocomplete="new-password">
+    <button class="submit" type="submit">Create Account</button>
+  </form>
+
+  <div class="error" id="errorBox"></div>
+</div>
+
+<script>
+function showTab(which){
+  document.getElementById('tabLogin').classList.toggle('active', which==='login');
+  document.getElementById('tabSignup').classList.toggle('active', which==='signup');
+  document.getElementById('loginForm').classList.toggle('hidden', which!=='login');
+  document.getElementById('signupForm').classList.toggle('hidden', which!=='signup');
+  document.getElementById('errorBox').style.display='none';
+}
+
+function showError(msg){
+  const box = document.getElementById('errorBox');
+  box.textContent = msg;
+  box.style.display='block';
+}
+
+async function submitAuth(url, payload, submitBtn){
+  submitBtn.disabled = true;
+  try{
+    const res = await fetch(url, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(payload)
+    });
+    const body = await res.json().catch(()=>({}));
+    if(!res.ok){
+      showError(body.error || 'Something went wrong.');
+      submitBtn.disabled = false;
+      return;
+    }
+    window.location.href = '/app.html';
+  }catch(err){
+    showError('Could not reach the server. Is it running?');
+    submitBtn.disabled = false;
+  }
+}
+
+document.getElementById('loginForm').addEventListener('submit', (e)=>{
+  e.preventDefault();
+  submitAuth('/api/auth/login', {
+    email: document.getElementById('loginEmail').value,
+    password: document.getElementById('loginPassword').value
+  }, e.submitter || e.target.querySelector('button'));
+});
+
+document.getElementById('signupForm').addEventListener('submit', (e)=>{
+  e.preventDefault();
+  submitAuth('/api/auth/signup', {
+    name: document.getElementById('signupName').value,
+    email: document.getElementById('signupEmail').value,
+    password: document.getElementById('signupPassword').value
+  }, e.submitter || e.target.querySelector('button'));
+});
+
+// If already signed in, skip straight to the app.
+fetch('/api/auth/me').then(r=>{ if(r.status===200) window.location.href='/app.html'; });
+</script>
+
+</body>
+</html>
