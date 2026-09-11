@@ -1,12 +1,5 @@
 /**
- * Concrete Mix Designer — backend
- * Pure Node.js (no npm packages required). Provides:
- *   - Account creation / login / logout (session cookie)
- *   - Per-user storage of trial sheets (JSON file "database")
- *   - Static file serving for the front-end (public/)
- *
- * Run:  node server.js
- * Then open http://localhost:3000
+ * Concrete Mix Designer — backend with MongoDB Atlas
  */
 
 const http = require('http');
@@ -14,35 +7,23 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 const url = require('url');
+const { MongoClient } = require('mongodb');
 
 const PORT = process.env.PORT || 3000;
-const DATA_DIR = path.join(__dirname, 'data');
-const USERS_FILE = path.join(DATA_DIR, 'users.json');
-const TRIALS_FILE = path.join(DATA_DIR, 'trials.json');
+const MONGODB_URI = process.env.MONGODB_URI;
 const PUBLIC_DIR = path.join(__dirname, 'public');
 
-// ---------------------------------------------------------------------------
-// Bootstrap data files
-// ---------------------------------------------------------------------------
-if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
-if (!fs.existsSync(USERS_FILE)) fs.writeFileSync(USERS_FILE, '[]');
-if (!fs.existsSync(TRIALS_FILE)) fs.writeFileSync(TRIALS_FILE, '[]');
-
-function readJSON(file) {
-  return JSON.parse(fs.readFileSync(file, 'utf8') || '[]');
-}
-function writeJSON(file, data) {
-  fs.writeFileSync(file, JSON.stringify(data, null, 2));
-}
+let db, usersCol, trialsCol;
 
 // ---------------------------------------------------------------------------
-// Password hashing (scrypt, built into Node — no bcrypt dependency needed)
+// Password hashing (scrypt)
 // ---------------------------------------------------------------------------
 function hashPassword(password) {
   const salt = crypto.randomBytes(16).toString('hex');
   const hash = crypto.scryptSync(password, salt, 64).toString('hex');
   return `${salt}:${hash}`;
 }
+
 function verifyPassword(password, stored) {
   const [salt, hash] = String(stored).split(':');
   if (!salt || !hash) return false;
@@ -53,7 +34,7 @@ function verifyPassword(password, stored) {
 }
 
 // ---------------------------------------------------------------------------
-// Sessions (in-memory cookie sessions — fine for a single-instance prototype)
+// Sessions
 // ---------------------------------------------------------------------------
 const sessions = new Map(); // sid -> { userId, createdAt }
 
@@ -62,6 +43,7 @@ function createSession(userId) {
   sessions.set(sid, { userId, createdAt: Date.now() });
   return sid;
 }
+
 function parseCookies(header) {
   const out = {};
   (header || '').split(';').forEach((pair) => {
@@ -73,6 +55,7 @@ function parseCookies(header) {
   });
   return out;
 }
+
 function getSession(req) {
   const cookies = parseCookies(req.headers.cookie);
   const sid = cookies.sid;
@@ -82,7 +65,7 @@ function getSession(req) {
 }
 
 // ---------------------------------------------------------------------------
-// Request body / response helpers
+// Request / Response helpers
 // ---------------------------------------------------------------------------
 function readBody(req) {
   return new Promise((resolve, reject) => {
@@ -90,7 +73,7 @@ function readBody(req) {
     let tooLarge = false;
     req.on('data', (chunk) => {
       data += chunk;
-      if (data.length > 5 * 1024 * 1024) { // 5MB safety cap
+      if (data.length > 5 * 1024 * 1024) {
         tooLarge = true;
         req.destroy();
       }
@@ -107,6 +90,7 @@ function readBody(req) {
     req.on('error', reject);
   });
 }
+
 function sendJSON(res, status, obj, extraHeaders) {
   res.writeHead(status, Object.assign({ 'Content-Type': 'application/json; charset=utf-8' }, extraHeaders));
   res.end(JSON.stringify(obj));
@@ -124,6 +108,7 @@ const MIME = {
   '.png': 'image/png',
   '.ico': 'image/x-icon',
 };
+
 function serveStatic(req, res, pathname) {
   const safePath = path.normalize(pathname).replace(/^(\.\.[/\\])+/, '');
   const filePath = path.join(PUBLIC_DIR, safePath);
@@ -142,17 +127,6 @@ function serveStatic(req, res, pathname) {
   });
 }
 
-// ---------------------------------------------------------------------------
-// Data access helpers
-// ---------------------------------------------------------------------------
-function findUserByEmail(email) {
-  const users = readJSON(USERS_FILE);
-  return users.find((u) => u.email.toLowerCase() === String(email).toLowerCase());
-}
-function findUserById(id) {
-  const users = readJSON(USERS_FILE);
-  return users.find((u) => u.id === id);
-}
 function trialSummary(t) {
   const d = t.data || {};
   return {
@@ -167,7 +141,7 @@ function trialSummary(t) {
 }
 
 // ---------------------------------------------------------------------------
-// Server
+// Server Handler
 // ---------------------------------------------------------------------------
 const server = http.createServer(async (req, res) => {
   const parsed = url.parse(req.url, true);
@@ -178,17 +152,18 @@ const server = http.createServer(async (req, res) => {
     if (pathname === '/api/auth/signup' && req.method === 'POST') {
       const body = await readBody(req);
       const name = (body.name || '').trim();
-      const email = (body.email || '').trim();
+      const email = (body.email || '').trim().toLowerCase();
       const password = body.password || '';
 
       if (!name || !email || !password || password.length < 6) {
         return sendJSON(res, 400, { error: 'Name, a valid email, and a password of at least 6 characters are required.' });
       }
-      if (findUserByEmail(email)) {
+
+      const existing = await usersCol.findOne({ email });
+      if (existing) {
         return sendJSON(res, 409, { error: 'An account with this email already exists.' });
       }
 
-      const users = readJSON(USERS_FILE);
       const user = {
         id: crypto.randomUUID(),
         name,
@@ -196,20 +171,19 @@ const server = http.createServer(async (req, res) => {
         passwordHash: hashPassword(password),
         createdAt: new Date().toISOString(),
       };
-      users.push(user);
-      writeJSON(USERS_FILE, users);
+      await usersCol.insertOne(user);
 
       const sid = createSession(user.id);
       return sendJSON(res, 200, { id: user.id, name: user.name, email: user.email }, {
-        'Set-Cookie': `sid=${sid}; HttpOnly; Path=/; SameSite=Lax`,
+        'Set-Cookie': `sid=${sid}; HttpOnly; Path=/; SameSite=Lax; Secure`,
       });
     }
 
     if (pathname === '/api/auth/login' && req.method === 'POST') {
       const body = await readBody(req);
-      const email = (body.email || '').trim();
+      const email = (body.email || '').trim().toLowerCase();
       const password = body.password || '';
-      const user = email && findUserByEmail(email);
+      const user = email ? await usersCol.findOne({ email }) : null;
 
       if (!user || !verifyPassword(password, user.passwordHash)) {
         return sendJSON(res, 401, { error: 'Invalid email or password.' });
@@ -217,7 +191,7 @@ const server = http.createServer(async (req, res) => {
 
       const sid = createSession(user.id);
       return sendJSON(res, 200, { id: user.id, name: user.name, email: user.email }, {
-        'Set-Cookie': `sid=${sid}; HttpOnly; Path=/; SameSite=Lax`,
+        'Set-Cookie': `sid=${sid}; HttpOnly; Path=/; SameSite=Lax; Secure`,
       });
     }
 
@@ -225,13 +199,13 @@ const server = http.createServer(async (req, res) => {
       const session = getSession(req);
       if (session) sessions.delete(session.sid);
       return sendJSON(res, 200, { ok: true }, {
-        'Set-Cookie': 'sid=; HttpOnly; Path=/; Max-Age=0',
+        'Set-Cookie': 'sid=; HttpOnly; Path=/; Max-Age=0; Secure',
       });
     }
 
     if (pathname === '/api/auth/me' && req.method === 'GET') {
       const session = getSession(req);
-      const user = session && findUserById(session.userId);
+      const user = session ? await usersCol.findOne({ id: session.userId }) : null;
       if (!user) return sendJSON(res, 401, { error: 'Not signed in.' });
       return sendJSON(res, 200, { id: user.id, name: user.name, email: user.email });
     }
@@ -239,21 +213,21 @@ const server = http.createServer(async (req, res) => {
     // ---------------- TRIALS (auth required) ----------------
     if (pathname.startsWith('/api/trials')) {
       const session = getSession(req);
-      const user = session && findUserById(session.userId);
+      const user = session ? await usersCol.findOne({ id: session.userId }) : null;
       if (!user) return sendJSON(res, 401, { error: 'Not signed in.' });
       const userId = user.id;
 
       if (pathname === '/api/trials' && req.method === 'GET') {
-        const trials = readJSON(TRIALS_FILE)
-          .filter((t) => t.userId === userId)
-          .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+        const trials = await trialsCol
+          .find({ userId })
+          .sort({ updatedAt: -1 })
+          .toArray();
         return sendJSON(res, 200, trials.map(trialSummary));
       }
 
       if (pathname === '/api/trials' && req.method === 'POST') {
         const body = await readBody(req);
         if (!body.data) return sendJSON(res, 400, { error: 'Missing trial data.' });
-        const trials = readJSON(TRIALS_FILE);
         const now = new Date().toISOString();
         const trial = {
           id: crypto.randomUUID(),
@@ -263,37 +237,38 @@ const server = http.createServer(async (req, res) => {
           createdAt: now,
           updatedAt: now,
         };
-        trials.push(trial);
-        writeJSON(TRIALS_FILE, trials);
+        await trialsCol.insertOne(trial);
         return sendJSON(res, 200, { id: trial.id, updatedAt: trial.updatedAt });
       }
 
       const idMatch = pathname.match(/^\/api\/trials\/([a-zA-Z0-9-]+)$/);
       if (idMatch) {
         const trialId = idMatch[1];
-        const trials = readJSON(TRIALS_FILE);
-        const idx = trials.findIndex((t) => t.id === trialId && t.userId === userId);
 
         if (req.method === 'GET') {
-          if (idx === -1) return sendJSON(res, 404, { error: 'Trial not found.' });
-          return sendJSON(res, 200, trials[idx]);
+          const trial = await trialsCol.findOne({ id: trialId, userId }, { projection: { _id: 0 } });
+          if (!trial) return sendJSON(res, 404, { error: 'Trial not found.' });
+          return sendJSON(res, 200, trial);
         }
 
         if (req.method === 'PUT') {
-          if (idx === -1) return sendJSON(res, 404, { error: 'Trial not found.' });
           const body = await readBody(req);
           if (!body.data) return sendJSON(res, 400, { error: 'Missing trial data.' });
-          trials[idx].data = body.data;
-          trials[idx].trialRef = body.data.trialRef || trials[idx].trialRef;
-          trials[idx].updatedAt = new Date().toISOString();
-          writeJSON(TRIALS_FILE, trials);
-          return sendJSON(res, 200, { id: trials[idx].id, updatedAt: trials[idx].updatedAt });
+          const updatedAt = new Date().toISOString();
+          const trialRef = body.data.trialRef || 'Untitled Trial';
+
+          const result = await trialsCol.updateOne(
+            { id: trialId, userId },
+            { $set: { data: body.data, trialRef, updatedAt } }
+          );
+
+          if (result.matchedCount === 0) return sendJSON(res, 404, { error: 'Trial not found.' });
+          return sendJSON(res, 200, { id: trialId, updatedAt });
         }
 
         if (req.method === 'DELETE') {
-          if (idx === -1) return sendJSON(res, 404, { error: 'Trial not found.' });
-          trials.splice(idx, 1);
-          writeJSON(TRIALS_FILE, trials);
+          const result = await trialsCol.deleteOne({ id: trialId, userId });
+          if (result.deletedCount === 0) return sendJSON(res, 404, { error: 'Trial not found.' });
           return sendJSON(res, 200, { ok: true });
         }
       }
@@ -317,6 +292,31 @@ const server = http.createServer(async (req, res) => {
   }
 });
 
-server.listen(PORT, () => {
-  console.log(`Concrete Mix Designer running at http://localhost:${PORT}`);
-});
+// ---------------------------------------------------------------------------
+// Database Connection & Server Start
+// ---------------------------------------------------------------------------
+async function start() {
+  try {
+    if (!MONGODB_URI) {
+      throw new Error('MONGODB_URI environment variable is missing.');
+    }
+    const client = new MongoClient(MONGODB_URI);
+    await client.connect();
+    console.log('Connected successfully to MongoDB Atlas');
+
+    db = client.db();
+    usersCol = db.collection('users');
+    trialsCol = db.collection('trials');
+
+    await usersCol.createIndex({ email: 1 }, { unique: true });
+
+    server.listen(PORT, () => {
+      console.log(`Concrete Mix Designer running on port ${PORT}`);
+    });
+  } catch (err) {
+    console.error('Failed to connect to database:', err);
+    process.exit(1);
+  }
+}
+
+start();
