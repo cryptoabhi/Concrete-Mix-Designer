@@ -10,5 +10,5 @@
     "node": ">=18"
   },
   "license": "UNLICENSED",
-  "dependencies": {}
+  "dependencies": {"mongodb": "^6.8.0"}
 }
