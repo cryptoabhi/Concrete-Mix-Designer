@@ -76,6 +76,20 @@ input[readonly]{background:#f1f5f9;color:#334155}
   <div class="topbar-left">Concrete Mix Designer</div>
   <div class="topbar-right">
     <span id="userLabel"></span>
+    <button
+    type="button"
+    onclick="goToDashboard()"
+    style="
+        background:#2563eb;
+        color:white;
+        border:none;
+        padding:8px 14px;
+        border-radius:6px;
+        cursor:pointer;
+        font-weight:600;
+    ">
+    🏠 Dashboard
+</button>
     <button class="dark" onclick="newTrial()">New Trial</button>
     <button class="primary" onclick="openMyTrials()">My Trials</button>
     <button class="green" onclick="saveTrial(false)">Save Trial</button>
@@ -110,7 +124,7 @@ input[readonly]{background:#f1f5f9;color:#334155}
 
 <div>
 <label>Trial Reference No.</label>
-<input id="trialRef" value="TRIAL-032">
+<input id="trialRef" value="">
 </div>
 
 <div>
@@ -120,12 +134,12 @@ input[readonly]{background:#f1f5f9;color:#334155}
 
 <div>
 <label>Customer Name</label>
-<input id="customer" value="Hella Infra">
+<input id="customer" value="">
 </div>
 
 <div>
 <label>Project</label>
-<input id="project" value="Kohinoor">
+<input id="project" value="">
 </div>
 
 <div>
@@ -138,12 +152,15 @@ input[readonly]{background:#f1f5f9;color:#334155}
 <option>40</option>
 <option>45</option>
 <option>50</option>
+<option>60</option>
+<option>70</option>
+<option>80</option>
 </select>
 </div>
 
 <div>
 <label>Target Slump (mm)</label>
-<input id="slump" type="number" value="100">
+<input id="slump" type="number" value="200">
 </div>
 
 <div>
@@ -153,7 +170,7 @@ input[readonly]{background:#f1f5f9;color:#334155}
 
 <div>
 <label>Batch Time</label>
-<input id="batchTime" type="time" value="15:50">
+<input id="batchTime" type="time" value="">
 </div>
 
 <div>
@@ -178,7 +195,7 @@ input[readonly]{background:#f1f5f9;color:#334155}
 <th>Source</th>
 <th>Specific Gravity</th>
 <th>Replacement % of Binder</th>
-<th>Initial Qty kg/m³</th>
+<!-- <th>Initial Qty kg/m³</th> -->
 </tr>
 </thead>
 
@@ -189,15 +206,15 @@ input[readonly]{background:#f1f5f9;color:#334155}
 <td><input id="cementSrc" value="OPC 53"></td>
 <td><input id="sgC" type="number" step=".01" value="3.15"></td>
 <td id="cementPct">100%</td>
-<td><input id="cementInput" type="number" value="330"></td>
+<!-- <td><input id="cementInput" type="number" value="330"></td> -->
 </tr>
 
 <tr>
 <td class="left">PFA / Fly Ash</td>
 <td><input id="pfaSrc" value="Nashik"></td>
 <td><input id="sgP" type="number" step=".01" value="2.30"></td>
-<td><input id="pPFA" type="number" value="26.67"></td>
-<td><input id="pfaInput" type="number" value="120"></td>
+<td><input id="pPFA" type="number" value="25"></td>
+<!-- <td><input id="pfaInput" type="number" value="120"></td> -->
 </tr>
 
 <tr>
@@ -205,7 +222,7 @@ input[readonly]{background:#f1f5f9;color:#334155}
 <td><input id="ggbsSrc" value="JSW"></td>
 <td><input id="sgG" type="number" step=".01" value="2.90"></td>
 <td><input id="pGGBS" type="number" value="0"></td>
-<td><input id="ggbsInput" type="number" value="0"></td>
+<!-- <td><input id="ggbsInput" type="number" value="0"></td> -->
 </tr>
 
 <tr>
@@ -213,7 +230,7 @@ input[readonly]{background:#f1f5f9;color:#334155}
 <td><input id="ultraSrc"></td>
 <td><input id="sgU" type="number" step=".01" value="2.65"></td>
 <td><input id="pUltra" type="number" value="0"></td>
-<td><input id="ultraInput" type="number" value="0"></td>
+<!-- <td><input id="ultraInput" type="number" value="0"></td> -->
 </tr>
 
 <tr>
@@ -221,7 +238,7 @@ input[readonly]{background:#f1f5f9;color:#334155}
 <td><input id="microSrc"></td>
 <td><input id="sgM" type="number" step=".01" value="2.20"></td>
 <td><input id="pMicro" type="number" value="0"></td>
-<td><input id="microInput" type="number" value="0"></td>
+<!-- <td><input id="microInput" type="number" value="0"></td> -->
 </tr>
 
 <tr>
@@ -229,7 +246,7 @@ input[readonly]{background:#f1f5f9;color:#334155}
 <td><input id="ca20Src" value="Bhiwandi"></td>
 <td><input id="sgCA20" type="number" step=".01" value="2.70"></td>
 <td>-</td>
-<td><input id="ca20Input" type="number" value="562"></td>
+<!-- <td><input id="ca20Input" type="number" value="562"></td> -->
 </tr>
 
 <tr>
@@ -237,7 +254,7 @@ input[readonly]{background:#f1f5f9;color:#334155}
 <td><input id="ca10Src" value="Bhiwandi"></td>
 <td><input id="sgCA10" type="number" step=".01" value="2.70"></td>
 <td>-</td>
-<td><input id="ca10Input" type="number" value="445"></td>
+<!-- <td><input id="ca10Input" type="number" value="445"></td> -->
 </tr>
 
 <tr>
@@ -245,7 +262,7 @@ input[readonly]{background:#f1f5f9;color:#334155}
 <td><input id="csSrc" value="Bhiwandi"></td>
 <td><input id="sgCS" type="number" step=".01" value="2.65"></td>
 <td>-</td>
-<td><input id="csInput" type="number" value="858"></td>
+<!-- <td><input id="csInput" type="number" value="858"></td> -->
 </tr>
 
 <tr>
@@ -253,7 +270,7 @@ input[readonly]{background:#f1f5f9;color:#334155}
 <td><input id="rsSrc"></td>
 <td><input id="sgRS" type="number" step=".01" value="2.60"></td>
 <td>-</td>
-<td><input id="rsInput" type="number" value="0"></td>
+<!-- <td><input id="rsInput" type="number" value="0"></td> -->
 </tr>
 
 </tbody>
@@ -345,7 +362,7 @@ These values are automatically reflected in the Trial Mix Record.
 
 <div>
 <label>Base Water kg/m³</label>
-<input id="baseWater" type="number" value="162">
+<input id="baseWater" type="number" value="186">
 </div>
 
 <div>
@@ -375,6 +392,12 @@ These values are automatically reflected in the Trial Mix Record.
 <label>Admixture Water Reduction %</label>
 <input id="waterRed" type="number" value="20">
 </div>
+<div><label>Coarse Aggregate (CA) % of Total Aggregate Volume</label><input id="caAggPct" type="number" step="0.1" value="62"></div>
+<div><label>Fine Aggregate (FA) % of Total Aggregate Volume</label><input id="faAggPct" type="number" step="0.1" value="38"></div>
+<div><label>20 mm % of CA</label><input id="ca20Pct" type="number" step="0.1" value="60"></div>
+<div><label>10 mm % of CA</label><input id="ca10Pct" type="number" step="0.1" value="40"></div>
+<div><label>Crushed Sand % of FA</label><input id="csFaPct" type="number" step="0.1" value="100"></div>
+<div><label>River Sand % of FA</label><input id="rsFaPct" type="number" step="0.1" value="0"></div>
 
 </div>
 
@@ -385,11 +408,8 @@ These values are automatically reflected in the Trial Mix Record.
 </div>
 
 </section>
-
-
 <!-- 5 -->
 <section class="card">
-
 <h2>5. Laboratory Trial Mix Record</h2>
 
 <div class="sheet">
@@ -524,6 +544,13 @@ MIX PROP. / UNIT BATCH WEIGHTS / m³
 <tbody>
 </tbody>
 
+<tfoot>
+<tr>
+<td colspan="2" style="text-align:right;font-weight:700;">Total Theoretical Density (SSD)</td>
+<td colspan="1" style="font-weight:700;"id="totalTheoreticalDensity"></td>
+</tr>
+</tfoot>
+
 </table>
 
 </div>
@@ -539,7 +566,7 @@ Update Corrected & Trial Quantities
 
 
 <div class="sheet-section">
-6. PLASTIC PROPERTIES
+5. PLASTIC PROPERTIES
 </div>
 
 <table>
@@ -593,7 +620,7 @@ Update Corrected & Trial Quantities
 
 
 <div class="sheet-section">
-7. COMPRESSIVE STRENGTH TEST RECORD
+6. COMPRESSIVE STRENGTH TEST RECORD
 </div>
 
 <table>
@@ -716,6 +743,33 @@ return Number.isFinite(x)?x:0;
    MAIN MIX DESIGN CALCULATION
    ========================================================= */
 
+function setupPercentageAutoBalance(){
+  const pairs = [
+    ["ca20Pct", "ca10Pct"],
+    ["caAggPct", "faAggPct"],
+    ["csFaPct", "rsFaPct"]
+  ];
+
+  pairs.forEach(([firstId, secondId]) => {
+    const first = document.getElementById(firstId);
+    const second = document.getElementById(secondId);
+    if (!first || !second) return;
+
+    const update = (source, target) => {
+      if (source.value === "") return;
+      let value = parseFloat(source.value);
+      if (!Number.isFinite(value)) return;
+      value = Math.max(0, Math.min(100, value));
+      source.value = value;
+      target.value = (100 - value).toFixed(1).replace(/\\.0$/, "");
+      calculate();
+    };
+
+    first.addEventListener("input", () => update(first, second));
+    second.addEventListener("input", () => update(second, first));
+  });
+}
+
 function calculate(){
 
 const grade=v("grade");
@@ -830,45 +884,41 @@ const rem =
 -ggbs/(sgG*1000)
 -ultra/(sgU*1000)
 -micro/(sgM*1000)
--admix/(sgAdm*1000);
+-admix/(sgAdm*1000)
+-0.01; /*1% air as per IS
 
 
-/* Coarse aggregate fraction */
+/* Aggregate split percentages */
 
-let caFrac=.62;
+const caPct=v("caAggPct");
+const faPct=v("faAggPct");
+const ca20Pct=v("ca20Pct");
+const ca10Pct=v("ca10Pct");
+const csFaPct=v("csFaPct");
+const rsFaPct=v("rsFaPct");
 
-if(slump>50){
-
-caFrac -=
-((slump-50)/25)*.01;
-
+if(Math.abs(caPct+faPct-100)>0.001){
+  alert("CA % and FA % must total 100%.");
+  return;
+}
+if(Math.abs(ca20Pct+ca10Pct-100)>0.001){
+  alert("20 mm % and 10 mm % must total 100% of CA.");
+  return;
+}
+if(Math.abs(csFaPct+rsFaPct-100)>0.001){
+  alert("Crushed Sand % and River Sand % must total 100% of FA.");
+  return;
 }
 
-caFrac =
-Math.max(.45,Math.min(.68,caFrac));
-
-
 /* Aggregate volumes */
-
-const caVol =
-rem*caFrac;
-
-const faVol =
-rem-caVol;
-
+const caVol=rem*caPct/100;
+const faVol=rem*faPct/100;
 
 /* Aggregate quantities */
-
-const ca20 =
-caVol*.70*v("sgCA20")*1000;
-
-const ca10 =
-caVol*.30*v("sgCA10")*1000;
-
-const cs =
-faVol*v("sgCS")*1000;
-
-const rs=0;
+const ca20=caVol*ca20Pct/100*v("sgCA20")*1000;
+const ca10=caVol*ca10Pct/100*v("sgCA10")*1000;
+const cs=faVol*csFaPct/100*v("sgCS")*1000;
+const rs=faVol*rsFaPct/100*v("sgRS")*1000;
 
 
 /* Store calculated design */
@@ -904,6 +954,8 @@ window.mixWB=wb;
 window.mixTarget=target;
 window.mixBinder=binder;
 
+const ssdMass=cement+pfa+ggbs+ultra+micro+ca20+ca10+cs+rs+ssdWater+admix;
+put("totalTheoreticalDensity",ssdMass.toFixed(2));
 
 /* Build trial sheet */
 
@@ -1439,8 +1491,8 @@ recalcMoistureCorrection();
 });
 
 
-/* Initial synchronization */
-
+/* Percentage auto-balance + initial synchronization */
+setupPercentageAutoBalance();
 copyInputsLive();
 
 copyMoisture();
@@ -1636,7 +1688,9 @@ async function openMyTrials(){
 function closeMyTrials(){
   document.getElementById("trialsModal").classList.add("hidden");
 }
-
+function goToDashboard() {
+    window.location.href = '/select-tool.html';
+}
 checkAuth();
 
 </script>
