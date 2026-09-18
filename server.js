@@ -1,322 +1,1056 @@
 /**
- * Concrete Mix Designer — backend with MongoDB Atlas
+ * Concrete Technology Tools
+ * Backend with MongoDB Atlas
+ *
+ * Features:
+ * - User signup/login/logout
+ * - Session-based authentication
+ * - MongoDB Atlas user and trial storage
+ * - User-specific trial management
+ * - Formulation Suggester access control
+ * - Admin grant/revoke formulation access
+ * - Protected formulation tool
+ * - Static file serving
  */
 
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
-const url = require('url');
+const { URL } = require('url');
 const { MongoClient } = require('mongodb');
+
+// ---------------------------------------------------------------------------
+// Configuration
+// ---------------------------------------------------------------------------
 
 const PORT = process.env.PORT || 3000;
 const MONGODB_URI = process.env.MONGODB_URI;
 const PUBLIC_DIR = path.join(__dirname, 'public');
 
-let db, usersCol, trialsCol;
+// Admin email with permanent formulation access
+const ADMIN_EMAIL = 'kordeabhishek383@gmail.com';
+
+// MongoDB variables
+let db;
+let usersCol;
+let trialsCol;
 
 // ---------------------------------------------------------------------------
-// Password hashing (scrypt)
+// Password Hashing
 // ---------------------------------------------------------------------------
+
 function hashPassword(password) {
-  const salt = crypto.randomBytes(16).toString('hex');
-  const hash = crypto.scryptSync(password, salt, 64).toString('hex');
-  return `${salt}:${hash}`;
+    const salt = crypto.randomBytes(16).toString('hex');
+
+    const hash = crypto
+        .scryptSync(password, salt, 64)
+        .toString('hex');
+
+    return `${salt}:${hash}`;
 }
 
-function verifyPassword(password, stored) {
-  const [salt, hash] = String(stored).split(':');
-  if (!salt || !hash) return false;
-  const check = crypto.scryptSync(password, salt, 64).toString('hex');
-  const a = Buffer.from(hash, 'hex');
-  const b = Buffer.from(check, 'hex');
-  return a.length === b.length && crypto.timingSafeEqual(a, b);
+function verifyPassword(password, storedHash) {
+    try {
+        const parts = String(storedHash || '').split(':');
+
+        if (parts.length !== 2) {
+            return false;
+        }
+
+        const salt = parts[0];
+        const originalHash = Buffer.from(parts[1], 'hex');
+
+        const hash = crypto.scryptSync(
+            password,
+            salt,
+            64
+        );
+
+        return (
+            hash.length === originalHash.length &&
+            crypto.timingSafeEqual(hash, originalHash)
+        );
+    } catch (err) {
+        return false;
+    }
 }
 
 // ---------------------------------------------------------------------------
 // Sessions
 // ---------------------------------------------------------------------------
-const sessions = new Map(); // sid -> { userId, createdAt }
+
+const sessions = new Map();
+// sid -> { userId, createdAt }
 
 function createSession(userId) {
-  const sid = crypto.randomBytes(24).toString('hex');
-  sessions.set(sid, { userId, createdAt: Date.now() });
-  return sid;
+    const sid = crypto.randomBytes(32).toString('hex');
+
+    sessions.set(sid, {
+        userId,
+        createdAt: Date.now()
+    });
+
+    return sid;
 }
 
-function parseCookies(header) {
-  const out = {};
-  (header || '').split(';').forEach((pair) => {
-    const idx = pair.indexOf('=');
-    if (idx === -1) return;
-    const k = pair.slice(0, idx).trim();
-    const v = pair.slice(idx + 1).trim();
-    if (k) out[k] = decodeURIComponent(v);
-  });
-  return out;
+function parseCookies(req) {
+    const header = req.headers.cookie || '';
+    const cookies = {};
+
+    header.split(';').forEach((part) => {
+        const index = part.indexOf('=');
+
+        if (index === -1) {
+            return;
+        }
+
+        const key = part.slice(0, index).trim();
+        const value = part.slice(index + 1).trim();
+
+        if (key) {
+            cookies[key] = decodeURIComponent(value);
+        }
+    });
+
+    return cookies;
 }
 
 function getSession(req) {
-  const cookies = parseCookies(req.headers.cookie);
-  const sid = cookies.sid;
-  if (!sid) return null;
-  const s = sessions.get(sid);
-  return s ? { sid, ...s } : null;
+    const cookies = parseCookies(req);
+
+    if (!cookies.sid) {
+        return null;
+    }
+
+    const session = sessions.get(cookies.sid);
+
+    if (!session) {
+        return null;
+    }
+
+    return {
+        sid: cookies.sid,
+        ...session
+    };
 }
 
 // ---------------------------------------------------------------------------
-// Request / Response helpers
+// Request Body
 // ---------------------------------------------------------------------------
-function readBody(req) {
-  return new Promise((resolve, reject) => {
-    let data = '';
-    let tooLarge = false;
-    req.on('data', (chunk) => {
-      data += chunk;
-      if (data.length > 5 * 1024 * 1024) {
-        tooLarge = true;
-        req.destroy();
-      }
+
+function parseBody(req) {
+    return new Promise((resolve, reject) => {
+        let body = '';
+        let tooLarge = false;
+
+        req.on('data', (chunk) => {
+            body += chunk.toString();
+
+            // Maximum request body size: 1 MB
+            if (body.length > 1024 * 1024) {
+                tooLarge = true;
+                req.destroy();
+                reject(new Error('Request body too large'));
+            }
+        });
+
+        req.on('end', () => {
+            if (tooLarge) {
+                return;
+            }
+
+            if (!body) {
+                resolve({});
+                return;
+            }
+
+            try {
+                resolve(JSON.parse(body));
+            } catch (err) {
+                reject(new Error('Invalid JSON'));
+            }
+        });
+
+        req.on('error', reject);
     });
-    req.on('end', () => {
-      if (tooLarge) return reject(new Error('Payload too large'));
-      if (!data) return resolve({});
-      try {
-        resolve(JSON.parse(data));
-      } catch (e) {
-        reject(e);
-      }
+}
+
+// ---------------------------------------------------------------------------
+// Response Helpers
+// ---------------------------------------------------------------------------
+
+function sendJSON(res, statusCode, data, extraHeaders = {}) {
+    res.writeHead(statusCode, {
+        'Content-Type': 'application/json; charset=utf-8',
+        ...extraHeaders
     });
-    req.on('error', reject);
-  });
+
+    res.end(JSON.stringify(data));
 }
 
-function sendJSON(res, status, obj, extraHeaders) {
-  res.writeHead(status, Object.assign({ 'Content-Type': 'application/json; charset=utf-8' }, extraHeaders));
-  res.end(JSON.stringify(obj));
+function redirect(res, location) {
+    res.writeHead(302, {
+        Location: location
+    });
+
+    res.end();
+}
+
+function unauthorized(res, message = 'Unauthorized') {
+    sendJSON(res, 401, {
+        error: message
+    });
+}
+
+function forbidden(res, message = 'Access denied') {
+    sendJSON(res, 403, {
+        error: message
+    });
 }
 
 // ---------------------------------------------------------------------------
-// Static file serving
+// User Helpers
 // ---------------------------------------------------------------------------
-const MIME = {
-  '.html': 'text/html; charset=utf-8',
-  '.js': 'text/javascript; charset=utf-8',
-  '.css': 'text/css; charset=utf-8',
-  '.json': 'application/json; charset=utf-8',
-  '.svg': 'image/svg+xml',
-  '.png': 'image/png',
-  '.ico': 'image/x-icon',
+
+async function findUserByEmail(email) {
+    const normalizedEmail = String(email || '')
+        .trim()
+        .toLowerCase();
+
+    if (!normalizedEmail) {
+        return null;
+    }
+
+    return usersCol.findOne({
+        email: normalizedEmail
+    });
+}
+
+async function findUserById(id) {
+    if (!id) {
+        return null;
+    }
+
+    return usersCol.findOne({
+        id
+    });
+}
+
+async function getCurrentUser(req) {
+    const session = getSession(req);
+
+    if (!session) {
+        return null;
+    }
+
+    return findUserById(session.userId);
+}
+
+// ---------------------------------------------------------------------------
+// Formulation Access Control
+// ---------------------------------------------------------------------------
+
+function isAdmin(user) {
+    return (
+        !!user &&
+        String(user.email || '').toLowerCase() ===
+            ADMIN_EMAIL.toLowerCase()
+    );
+}
+
+function hasFormulationAccess(user) {
+    if (!user) {
+        return false;
+    }
+
+    // Admin always has access
+    if (isAdmin(user)) {
+        return true;
+    }
+
+    // Other users need explicit permission
+    return user.formulationAccess === true;
+}
+
+// ---------------------------------------------------------------------------
+// Static File Server
+// ---------------------------------------------------------------------------
+
+const MIME_TYPES = {
+    '.html': 'text/html; charset=utf-8',
+    '.css': 'text/css; charset=utf-8',
+    '.js': 'application/javascript; charset=utf-8',
+    '.json': 'application/json; charset=utf-8',
+    '.png': 'image/png',
+    '.jpg': 'image/jpeg',
+    '.jpeg': 'image/jpeg',
+    '.gif': 'image/gif',
+    '.svg': 'image/svg+xml',
+    '.ico': 'image/x-icon',
+    '.webp': 'image/webp'
 };
 
 function serveStatic(req, res, pathname) {
-  const safePath = path.normalize(pathname).replace(/^(\.\.[/\\])+/, '');
-  const filePath = path.join(PUBLIC_DIR, safePath);
-  if (!filePath.startsWith(PUBLIC_DIR)) {
-    res.writeHead(403);
-    return res.end('Forbidden');
-  }
-  fs.stat(filePath, (err, stat) => {
-    if (err || !stat.isFile()) {
-      res.writeHead(404, { 'Content-Type': 'text/plain' });
-      return res.end('Not found');
+    let decodedPath;
+
+    try {
+        decodedPath = decodeURIComponent(pathname);
+    } catch (err) {
+        forbidden(res, 'Invalid path');
+        return;
     }
-    const ext = path.extname(filePath);
-    res.writeHead(200, { 'Content-Type': MIME[ext] || 'application/octet-stream' });
-    fs.createReadStream(filePath).pipe(res);
-  });
-}
 
-function trialSummary(t) {
-  const d = t.data || {};
-  return {
-    id: t.id,
-    trialRef: t.trialRef,
-    project: d.project || '',
-    customer: d.customer || '',
-    grade: d.grade || '',
-    updatedAt: t.updatedAt,
-    createdAt: t.createdAt,
-  };
+    // Remove leading slash before joining with PUBLIC_DIR
+    const relativePath = decodedPath.replace(/^[/\\]+/, '');
+
+    const filePath = path.resolve(
+        PUBLIC_DIR,
+        relativePath
+    );
+
+    const publicRoot = path.resolve(PUBLIC_DIR);
+
+    // Prevent path traversal
+    if (
+        filePath !== publicRoot &&
+        !filePath.startsWith(publicRoot + path.sep)
+    ) {
+        forbidden(res, 'Invalid path');
+        return;
+    }
+
+    fs.stat(filePath, (err, stats) => {
+        if (err || !stats.isFile()) {
+            sendJSON(res, 404, {
+                error: 'File not found'
+            });
+            return;
+        }
+
+        const ext = path.extname(filePath).toLowerCase();
+
+        const contentType =
+            MIME_TYPES[ext] ||
+            'application/octet-stream';
+
+        res.writeHead(200, {
+            'Content-Type': contentType,
+            'Cache-Control': 'no-cache'
+        });
+
+        fs.createReadStream(filePath).pipe(res);
+    });
 }
 
 // ---------------------------------------------------------------------------
-// Server Handler
+// Protected Access Restricted Page
 // ---------------------------------------------------------------------------
+
+function sendFormulationRestrictedPage(res) {
+    res.writeHead(403, {
+        'Content-Type': 'text/html; charset=utf-8'
+    });
+
+    res.end(`
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Access Restricted</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: #f1f5f9;
+            font-family: Arial, sans-serif;
+            color: #1e293b;
+        }
+
+        .box {
+            width: 100%;
+            max-width: 440px;
+            padding: 40px 30px;
+            background: #ffffff;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.10);
+        }
+
+        .icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            margin: 0 0 14px;
+            font-size: 26px;
+        }
+
+        p {
+            color: #64748b;
+            line-height: 1.6;
+            margin: 8px 0;
+        }
+
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 11px 20px;
+            background: #2563eb;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+        }
+
+        a:hover {
+            background: #1d4ed8;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box">
+        <div class="icon">🔒</div>
+
+        <h1>Access Restricted</h1>
+
+        <p>
+            You do not currently have access to the
+            Formulation Suggester.
+        </p>
+
+        <p>
+            Please contact Abhishek to request access.
+        </p>
+
+        <a href="/select-tool.html">
+            Back to Tools
+        </a>
+    </div>
+</body>
+</html>
+    `);
+}
+
+// ---------------------------------------------------------------------------
+// Server
+// ---------------------------------------------------------------------------
+
 const server = http.createServer(async (req, res) => {
-  const parsed = url.parse(req.url, true);
-  const pathname = decodeURIComponent(parsed.pathname);
+    try {
+        const parsedURL = new URL(
+            req.url,
+            `http://${req.headers.host || 'localhost'}`
+        );
 
-  try {
-    // ---------------- AUTH ----------------
-    if (pathname === '/api/auth/signup' && req.method === 'POST') {
-      const body = await readBody(req);
-      const name = (body.name || '').trim();
-      const email = (body.email || '').trim().toLowerCase();
-      const password = body.password || '';
+        const pathname = parsedURL.pathname;
 
-      if (!name || !email || !password || password.length < 6) {
-        return sendJSON(res, 400, { error: 'Name, a valid email, and a password of at least 6 characters are required.' });
-      }
+        // ===================================================================
+        // AUTH: SIGNUP
+        // ===================================================================
 
-      const existing = await usersCol.findOne({ email });
-      if (existing) {
-        return sendJSON(res, 409, { error: 'An account with this email already exists.' });
-      }
+        if (
+            req.method === 'POST' &&
+            pathname === '/api/auth/signup'
+        ) {
+            const body = await parseBody(req);
 
-      const user = {
-        id: crypto.randomUUID(),
-        name,
-        email,
-        passwordHash: hashPassword(password),
-        createdAt: new Date().toISOString(),
-      };
-      await usersCol.insertOne(user);
+            const name = String(body.name || '').trim();
 
-      const sid = createSession(user.id);
-      return sendJSON(res, 200, { id: user.id, name: user.name, email: user.email }, {
-        'Set-Cookie': `sid=${sid}; HttpOnly; Path=/; SameSite=Lax; Secure`,
-      });
-    }
+            const email = String(body.email || '')
+                .trim()
+                .toLowerCase();
 
-    if (pathname === '/api/auth/login' && req.method === 'POST') {
-      const body = await readBody(req);
-      const email = (body.email || '').trim().toLowerCase();
-      const password = body.password || '';
-      const user = email ? await usersCol.findOne({ email }) : null;
+            const password = String(body.password || '');
 
-      if (!user || !verifyPassword(password, user.passwordHash)) {
-        return sendJSON(res, 401, { error: 'Invalid email or password.' });
-      }
+            if (!name) {
+                sendJSON(res, 400, {
+                    error: 'Name is required'
+                });
+                return;
+            }
 
-      const sid = createSession(user.id);
-      return sendJSON(res, 200, { id: user.id, name: user.name, email: user.email }, {
-        'Set-Cookie': `sid=${sid}; HttpOnly; Path=/; SameSite=Lax; Secure`,
-      });
-    }
+            if (!email || !email.includes('@')) {
+                sendJSON(res, 400, {
+                    error: 'A valid email is required'
+                });
+                return;
+            }
 
-    if (pathname === '/api/auth/logout' && req.method === 'POST') {
-      const session = getSession(req);
-      if (session) sessions.delete(session.sid);
-      return sendJSON(res, 200, { ok: true }, {
-        'Set-Cookie': 'sid=; HttpOnly; Path=/; Max-Age=0; Secure',
-      });
-    }
+            if (password.length < 6) {
+                sendJSON(res, 400, {
+                    error: 'Password must be at least 6 characters'
+                });
+                return;
+            }
 
-    if (pathname === '/api/auth/me' && req.method === 'GET') {
-      const session = getSession(req);
-      const user = session ? await usersCol.findOne({ id: session.userId }) : null;
-      if (!user) return sendJSON(res, 401, { error: 'Not signed in.' });
-      return sendJSON(res, 200, { id: user.id, name: user.name, email: user.email });
-    }
+            const existingUser = await findUserByEmail(email);
 
-    // ---------------- TRIALS (auth required) ----------------
-    if (pathname.startsWith('/api/trials')) {
-      const session = getSession(req);
-      const user = session ? await usersCol.findOne({ id: session.userId }) : null;
-      if (!user) return sendJSON(res, 401, { error: 'Not signed in.' });
-      const userId = user.id;
+            if (existingUser) {
+                sendJSON(res, 409, {
+                    error: 'An account with this email already exists'
+                });
+                return;
+            }
 
-      if (pathname === '/api/trials' && req.method === 'GET') {
-        const trials = await trialsCol
-          .find({ userId })
-          .sort({ updatedAt: -1 })
-          .toArray();
-        return sendJSON(res, 200, trials.map(trialSummary));
-      }
+            const user = {
+                id: crypto.randomUUID(),
+                name,
+                email,
+                passwordHash: hashPassword(password),
 
-      if (pathname === '/api/trials' && req.method === 'POST') {
-        const body = await readBody(req);
-        if (!body.data) return sendJSON(res, 400, { error: 'Missing trial data.' });
-        const now = new Date().toISOString();
-        const trial = {
-          id: crypto.randomUUID(),
-          userId,
-          trialRef: body.data.trialRef || 'Untitled Trial',
-          data: body.data,
-          createdAt: now,
-          updatedAt: now,
-        };
-        await trialsCol.insertOne(trial);
-        return sendJSON(res, 200, { id: trial.id, updatedAt: trial.updatedAt });
-      }
+                // New users do not receive formulation access
+                formulationAccess: false,
 
-      const idMatch = pathname.match(/^\/api\/trials\/([a-zA-Z0-9-]+)$/);
-      if (idMatch) {
-        const trialId = idMatch[1];
+                createdAt: new Date().toISOString()
+            };
+
+            await usersCol.insertOne(user);
+
+            const sid = createSession(user.id);
+
+            sendJSON(
+                res,
+                201,
+                {
+                    id: user.id,
+                    name: user.name,
+                    email: user.email
+                },
+                {
+                    'Set-Cookie':
+                        `sid=${encodeURIComponent(sid)}; HttpOnly; Path=/; SameSite=Lax; Secure`
+                }
+            );
+
+            return;
+        }
+
+        // ===================================================================
+        // AUTH: LOGIN
+        // ===================================================================
+
+        if (
+            req.method === 'POST' &&
+            pathname === '/api/auth/login'
+        ) {
+            const body = await parseBody(req);
+
+            const email = String(body.email || '')
+                .trim()
+                .toLowerCase();
+
+            const password = String(body.password || '');
+
+            const user = await findUserByEmail(email);
+
+            if (
+                !user ||
+                !verifyPassword(password, user.passwordHash)
+            ) {
+                sendJSON(res, 401, {
+                    error: 'Invalid email or password'
+                });
+                return;
+            }
+
+            const sid = createSession(user.id);
+
+            sendJSON(
+                res,
+                200,
+                {
+                    id: user.id,
+                    name: user.name,
+                    email: user.email
+                },
+                {
+                    'Set-Cookie':
+                        `sid=${encodeURIComponent(sid)}; HttpOnly; Path=/; SameSite=Lax; Secure`
+                }
+            );
+
+            return;
+        }
+
+        // ===================================================================
+        // AUTH: LOGOUT
+        // ===================================================================
+
+        if (
+            req.method === 'POST' &&
+            pathname === '/api/auth/logout'
+        ) {
+            const session = getSession(req);
+
+            if (session) {
+                sessions.delete(session.sid);
+            }
+
+            sendJSON(
+                res,
+                200,
+                {
+                    success: true
+                },
+                {
+                    'Set-Cookie':
+                        'sid=; HttpOnly; Path=/; Max-Age=0; SameSite=Lax; Secure'
+                }
+            );
+
+            return;
+        }
+
+        // ===================================================================
+        // AUTH: CURRENT USER
+        // ===================================================================
+
+        if (
+            req.method === 'GET' &&
+            pathname === '/api/auth/me'
+        ) {
+            const user = await getCurrentUser(req);
+
+            if (!user) {
+                unauthorized(res, 'Not logged in');
+                return;
+            }
+
+            sendJSON(res, 200, {
+                id: user.id,
+                name: user.name,
+                email: user.email
+            });
+
+            return;
+        }
+
+        // ===================================================================
+        // FORMULATION: ACCESS CHECK
+        // ===================================================================
+
+        if (
+            req.method === 'GET' &&
+            pathname === '/api/auth/formulation-access'
+        ) {
+            const user = await getCurrentUser(req);
+
+            if (!user) {
+                unauthorized(res, 'Not logged in');
+                return;
+            }
+
+            sendJSON(res, 200, {
+                allowed: hasFormulationAccess(user),
+                admin: isAdmin(user),
+                name: user.name,
+                email: user.email
+            });
+
+            return;
+        }
+
+        // ===================================================================
+        // ADMIN: GRANT / REVOKE FORMULATION ACCESS
+        // ===================================================================
+
+        if (
+            req.method === 'POST' &&
+            pathname === '/api/admin/formulation-access'
+        ) {
+            const adminUser = await getCurrentUser(req);
+
+            if (!adminUser) {
+                unauthorized(res, 'Not logged in');
+                return;
+            }
+
+            if (!isAdmin(adminUser)) {
+                forbidden(res, 'Admin access required');
+                return;
+            }
+
+            const body = await parseBody(req);
+
+            const targetUserId = String(
+                body.userId || ''
+            ).trim();
+
+            const targetEmail = String(
+                body.email || ''
+            ).trim().toLowerCase();
+
+            const allowed = body.allowed === true;
+
+            if (!targetUserId && !targetEmail) {
+                sendJSON(res, 400, {
+                    error: 'User ID or email is required'
+                });
+                return;
+            }
+
+            let targetUser = null;
+
+            if (targetUserId) {
+                targetUser = await findUserById(targetUserId);
+            }
+
+            if (!targetUser && targetEmail) {
+                targetUser = await findUserByEmail(targetEmail);
+            }
+
+            if (!targetUser) {
+                sendJSON(res, 404, {
+                    error: 'User not found'
+                });
+                return;
+            }
+
+            // Admin access cannot be revoked
+            if (isAdmin(targetUser)) {
+                await usersCol.updateOne(
+                    { id: targetUser.id },
+                    {
+                        $set: {
+                            formulationAccess: true
+                        }
+                    }
+                );
+
+                sendJSON(res, 200, {
+                    success: true,
+                    message: 'Admin access is permanently enabled',
+                    user: {
+                        id: targetUser.id,
+                        name: targetUser.name,
+                        email: targetUser.email,
+                        formulationAccess: true
+                    }
+                });
+
+                return;
+            }
+
+            await usersCol.updateOne(
+                { id: targetUser.id },
+                {
+                    $set: {
+                        formulationAccess: allowed
+                    }
+                }
+            );
+
+            sendJSON(res, 200, {
+                success: true,
+                message: allowed
+                    ? 'Formulation access granted'
+                    : 'Formulation access revoked',
+                user: {
+                    id: targetUser.id,
+                    name: targetUser.name,
+                    email: targetUser.email,
+                    formulationAccess: allowed
+                }
+            });
+
+            return;
+        }
+
+        // ===================================================================
+        // ADMIN: GET ALL USERS
+        // ===================================================================
+
+        if (
+            req.method === 'GET' &&
+            pathname === '/api/admin/users'
+        ) {
+            const adminUser = await getCurrentUser(req);
+
+            if (!adminUser) {
+                unauthorized(res, 'Not logged in');
+                return;
+            }
+
+            if (!isAdmin(adminUser)) {
+                forbidden(res, 'Admin access required');
+                return;
+            }
+
+            const users = await usersCol
+                .find({})
+                .sort({ createdAt: -1 })
+                .toArray();
+
+            const safeUsers = users.map((user) => ({
+                id: user.id,
+                name: user.name,
+                email: user.email,
+
+                formulationAccess: isAdmin(user)
+                    ? true
+                    : user.formulationAccess === true,
+
+                isAdmin: isAdmin(user),
+                createdAt: user.createdAt
+            }));
+
+            sendJSON(res, 200, safeUsers);
+            return;
+        }
+
+        // ===================================================================
+        // TRIALS: AUTHENTICATION REQUIRED
+        // ===================================================================
+
+        if (pathname.startsWith('/api/trials')) {
+            const user = await getCurrentUser(req);
+
+            if (!user) {
+                unauthorized(res, 'Not logged in');
+                return;
+            }
+
+            // ---------------------------------------------------------------
+            // GET ALL USER TRIALS
+            // ---------------------------------------------------------------
+
+            if (
+                req.method === 'GET' &&
+                pathname === '/api/trials'
+            ) {
+                const trials = await trialsCol
+                    .find({ userId: user.id })
+                    .sort({ updatedAt: -1 })
+                    .toArray();
+
+                sendJSON(res, 200, trials);
+                return;
+            }
+
+            // ---------------------------------------------------------------
+            // CREATE TRIAL
+            // ---------------------------------------------------------------
+
+            if (
+                req.method === 'POST' &&
+                pathname === '/api/trials'
+            ) {
+                const body = await parseBody(req);
+
+                const now = new Date().toISOString();
+
+                const trial = {
+                    id: crypto.randomUUID(),
+                    userId: user.id,
+                    ...body,
+                    createdAt: now,
+                    updatedAt: now
+                };
+
+                await trialsCol.insertOne(trial);
+
+                sendJSON(res, 201, trial);
+                return;
+            }
+
+            // ---------------------------------------------------------------
+            // GET / UPDATE / DELETE SINGLE TRIAL
+            // ---------------------------------------------------------------
+
+            const match = pathname.match(
+                /^\/api\/trials\/([^/]+)$/
+            );
+
+            if (match) {
+                const trialId = match[1];
+
+                const trial = await trialsCol.findOne({
+                    id: trialId,
+                    userId: user.id
+                });
+
+                if (!trial) {
+                    sendJSON(res, 404, {
+                        error: 'Trial not found'
+                    });
+                    return;
+                }
+
+                // GET SINGLE TRIAL
+                if (req.method === 'GET') {
+                    sendJSON(res, 200, trial);
+                    return;
+                }
+
+                // UPDATE TRIAL
+                if (req.method === 'PUT') {
+                    const body = await parseBody(req);
+
+                    const updatedAt = new Date().toISOString();
+
+                    const updateData = {
+                        ...body,
+                        updatedAt
+                    };
+
+                    // Do not allow changing ownership or ID
+                    delete updateData.id;
+                    delete updateData.userId;
+                    delete updateData.createdAt;
+
+                    await trialsCol.updateOne(
+                        {
+                            id: trialId,
+                            userId: user.id
+                        },
+                        {
+                            $set: updateData
+                        }
+                    );
+
+                    const updatedTrial = await trialsCol.findOne({
+                        id: trialId,
+                        userId: user.id
+                    });
+
+                    sendJSON(res, 200, updatedTrial);
+                    return;
+                }
+
+                // DELETE TRIAL
+                if (req.method === 'DELETE') {
+                    await trialsCol.deleteOne({
+                        id: trialId,
+                        userId: user.id
+                    });
+
+                    sendJSON(res, 200, {
+                        success: true
+                    });
+
+                    return;
+                }
+            }
+
+            sendJSON(res, 404, {
+                error: 'Trial endpoint not found'
+            });
+
+            return;
+        }
+
+        // ===================================================================
+        // STATIC FILES
+        // ===================================================================
 
         if (req.method === 'GET') {
-          const trial = await trialsCol.findOne({ id: trialId, userId }, { projection: { _id: 0 } });
-          if (!trial) return sendJSON(res, 404, { error: 'Trial not found.' });
-          return sendJSON(res, 200, trial);
+            // Home page
+            if (pathname === '/') {
+                redirect(res, '/login.html');
+                return;
+            }
+
+            // Protect Formulation Suggester
+            if (pathname === '/formulation.html') {
+                const user = await getCurrentUser(req);
+
+                if (!user) {
+                    redirect(res, '/login.html');
+                    return;
+                }
+
+                if (!hasFormulationAccess(user)) {
+                    sendFormulationRestrictedPage(res);
+                    return;
+                }
+            }
+
+            serveStatic(req, res, pathname);
+            return;
         }
 
-        if (req.method === 'PUT') {
-          const body = await readBody(req);
-          if (!body.data) return sendJSON(res, 400, { error: 'Missing trial data.' });
-          const updatedAt = new Date().toISOString();
-          const trialRef = body.data.trialRef || 'Untitled Trial';
+        // ===================================================================
+        // UNKNOWN ROUTE
+        // ===================================================================
 
-          const result = await trialsCol.updateOne(
-            { id: trialId, userId },
-            { $set: { data: body.data, trialRef, updatedAt } }
-          );
+        sendJSON(res, 404, {
+            error: 'Route not found'
+        });
 
-          if (result.matchedCount === 0) return sendJSON(res, 404, { error: 'Trial not found.' });
-          return sendJSON(res, 200, { id: trialId, updatedAt });
+    } catch (err) {
+        console.error('Server error:', err);
+
+        if (!res.headersSent) {
+            sendJSON(res, 500, {
+                error: 'Internal server error'
+            });
+        } else {
+            res.end();
         }
-
-        if (req.method === 'DELETE') {
-          const result = await trialsCol.deleteOne({ id: trialId, userId });
-          if (result.deletedCount === 0) return sendJSON(res, 404, { error: 'Trial not found.' });
-          return sendJSON(res, 200, { ok: true });
-        }
-      }
-
-      return sendJSON(res, 404, { error: 'Not found.' });
     }
-
-    // ---------------- STATIC FILES ----------------
-    if (req.method === 'GET') {
-      if (pathname === '/') {
-        res.writeHead(302, { Location: '/login.html' });
-        return res.end();
-      }
-      return serveStatic(req, res, pathname);
-    }
-
-    sendJSON(res, 404, { error: 'Not found.' });
-  } catch (err) {
-    console.error(err);
-    sendJSON(res, 500, { error: 'Server error.' });
-  }
 });
 
 // ---------------------------------------------------------------------------
 // Database Connection & Server Start
 // ---------------------------------------------------------------------------
+
 async function start() {
-  try {
-    if (!MONGODB_URI) {
-      throw new Error('MONGODB_URI environment variable is missing.');
+    try {
+        if (!MONGODB_URI) {
+            throw new Error(
+                'MONGODB_URI environment variable is missing.'
+            );
+        }
+
+        const client = new MongoClient(MONGODB_URI);
+
+        await client.connect();
+
+        console.log('Connected successfully to MongoDB Atlas');
+
+        db = client.db();
+
+        usersCol = db.collection('users');
+        trialsCol = db.collection('trials');
+
+        // Unique email index
+        await usersCol.createIndex(
+            { email: 1 },
+            { unique: true }
+        );
+
+        // Useful indexes for faster trial queries
+        await trialsCol.createIndex({
+            userId: 1,
+            updatedAt: -1
+        });
+
+        server.listen(PORT, () => {
+            console.log(
+                `Concrete Technology Tools running on port ${PORT}`
+            );
+        });
+
+    } catch (err) {
+        console.error(
+            'Failed to connect to database:',
+            err
+        );
+
+        process.exit(1);
     }
-    const client = new MongoClient(MONGODB_URI);
-    await client.connect();
-    console.log('Connected successfully to MongoDB Atlas');
-
-    db = client.db();
-    usersCol = db.collection('users');
-    trialsCol = db.collection('trials');
-
-    await usersCol.createIndex({ email: 1 }, { unique: true });
-
-    server.listen(PORT, () => {
-      console.log(`Concrete Mix Designer running on port ${PORT}`);
-    });
-  } catch (err) {
-    console.error('Failed to connect to database:', err);
-    process.exit(1);
-  }
 }
 
 start();
