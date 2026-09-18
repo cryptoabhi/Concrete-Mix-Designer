@@ -1,0 +1,904 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin - Concrete Technology Tools</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #eef3f8, #dfe8f1);
+            color: #1f2937;
+        }
+
+        .header {
+            height: 70px;
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 35px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .app-logo {
+            width: 45px;
+            height: 45px;
+            object-fit: contain;
+        }
+
+        .brand-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .admin-name {
+            font-size: 14px;
+            color: #475569;
+        }
+
+        .logout-btn {
+            border: none;
+            background: #ef4444;
+            color: white;
+            padding: 9px 16px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .logout-btn:hover {
+            background: #dc2626;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: auto;
+            padding: 45px 25px 70px;
+        }
+
+        .page-heading {
+            margin-bottom: 30px;
+        }
+
+        .page-heading h1 {
+            font-size: 30px;
+            color: #172033;
+            margin-bottom: 8px;
+        }
+
+        .page-heading p {
+            color: #64748b;
+            font-size: 15px;
+        }
+
+        .admin-card {
+            background: white;
+            border-radius: 16px;
+            padding: 28px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e5e7eb;
+        }
+
+        .admin-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 25px;
+        }
+
+        .admin-title h2 {
+            font-size: 20px;
+            color: #172033;
+        }
+
+        .refresh-btn {
+            border: none;
+            background: #475569;
+            color: white;
+            padding: 9px 15px;
+            border-radius: 7px;
+            cursor: pointer;
+        }
+
+        .refresh-btn:hover {
+            background: #334155;
+        }
+
+        .user-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .user-table th {
+            text-align: left;
+            background: #f8fafc;
+            color: #475569;
+            font-size: 13px;
+            padding: 14px 12px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .user-table td {
+            padding: 15px 12px;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 14px;
+        }
+
+        .user-name-cell {
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .email-cell {
+            color: #64748b;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status.granted {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status.restricted {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .admin-status {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .action-btn {
+            border: none;
+            padding: 8px 14px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .grant-btn {
+            background: #16a34a;
+            color: white;
+        }
+
+        .grant-btn:hover {
+            background: #15803d;
+        }
+
+        .revoke-btn {
+            background: #ef4444;
+            color: white;
+        }
+
+        .revoke-btn:hover {
+            background: #dc2626;
+        }
+
+        .admin-label {
+            color: #2563eb;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 35px;
+            color: #64748b;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 35px;
+            color: #64748b;
+        }
+
+        .message {
+            display: none;
+            margin-bottom: 20px;
+            padding: 12px 15px;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .message.success {
+            display: block;
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .message.error {
+            display: block;
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .bottom-actions {
+            margin-top: 25px;
+        }
+
+        .back-btn {
+            display: inline-block;
+            padding: 10px 17px;
+            background: #475569;
+            color: white;
+            text-decoration: none;
+            border-radius: 7px;
+            font-size: 14px;
+        }
+
+        .back-btn:hover {
+            background: #334155;
+        }
+
+        @media (max-width: 750px) {
+
+            .header {
+                padding: 0 18px;
+            }
+
+            .brand-name {
+                font-size: 16px;
+            }
+
+            .admin-name {
+                display: none;
+            }
+
+            .container {
+                padding: 30px 15px 50px;
+            }
+
+            .admin-card {
+                padding: 15px;
+                overflow-x: auto;
+            }
+
+            .user-table {
+                min-width: 650px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <!-- HEADER -->
+
+    <header class="header">
+
+        <div class="brand">
+
+            <img
+                src="/logo.png"
+                alt="Concrete Technology Tools"
+                class="app-logo"
+            >
+
+            <div class="brand-name">
+                Concrete Technology Tools
+            </div>
+
+        </div>
+
+        <div class="header-right">
+
+            <span
+                class="admin-name"
+                id="adminName"
+            >
+                Admin
+            </span>
+
+            <button
+                class="logout-btn"
+                onclick="logout()"
+            >
+                Logout
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <!-- MAIN -->
+
+    <main class="container">
+
+        <div class="page-heading">
+
+            <h1>🔐 Admin Access Control</h1>
+
+            <p>
+                Manage access to the Formulation Suggester.
+            </p>
+
+        </div>
+
+
+        <div
+            id="message"
+            class="message"
+        ></div>
+
+
+        <div class="admin-card">
+
+            <div class="admin-title">
+
+                <h2>
+                    Registered Users
+                </h2>
+
+                <button
+                    class="refresh-btn"
+                    onclick="loadUsers()"
+                >
+                    ↻ Refresh
+                </button>
+
+            </div>
+
+
+            <div id="usersContainer">
+
+                <div class="loading">
+                    Loading users...
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="bottom-actions">
+
+            <a
+                href="/select-tool.html"
+                class="back-btn"
+            >
+                ← Back to Tools
+            </a>
+
+        </div>
+
+    </main>
+
+
+    <script>
+
+        /* =====================================================
+           SHOW MESSAGE
+           ===================================================== */
+
+        function showMessage(text, type) {
+
+            const message =
+                document.getElementById('message');
+
+            message.textContent = text;
+
+            message.className =
+                `message ${type}`;
+
+            setTimeout(() => {
+
+                message.className = 'message';
+
+            }, 4000);
+
+        }
+
+
+        /* =====================================================
+           LOAD ADMIN
+           ===================================================== */
+
+        async function loadAdmin() {
+
+            try {
+
+                const res =
+                    await fetch('/api/auth/me');
+
+                if (res.status === 401) {
+
+                    window.location.href =
+                        '/login.html';
+
+                    return;
+
+                }
+
+                if (!res.ok) {
+
+                    window.location.href =
+                        '/select-tool.html';
+
+                    return;
+
+                }
+
+                const user =
+                    await res.json();
+
+                const adminEmail =
+                    'kordeabhishek383@gmail.com';
+
+                if (
+                    !user.email ||
+                    user.email.toLowerCase() !==
+                    adminEmail.toLowerCase()
+                ) {
+
+                    document.body.innerHTML = `
+                        <div style="
+                            min-height:100vh;
+                            display:flex;
+                            align-items:center;
+                            justify-content:center;
+                            font-family:Arial,sans-serif;
+                            background:#f1f5f9;
+                        ">
+                            <div style="
+                                background:white;
+                                padding:40px;
+                                border-radius:16px;
+                                text-align:center;
+                                box-shadow:0 10px 30px rgba(0,0,0,.1);
+                            ">
+                                <h1>🔒 Access Denied</h1>
+                                <p style="
+                                    color:#64748b;
+                                    margin:15px 0 25px;
+                                ">
+                                    Admin access is required.
+                                </p>
+                                <a
+                                    href="/select-tool.html"
+                                    style="
+                                        display:inline-block;
+                                        padding:10px 18px;
+                                        background:#2563eb;
+                                        color:white;
+                                        text-decoration:none;
+                                        border-radius:7px;
+                                    "
+                                >
+                                    Back to Tools
+                                </a>
+                            </div>
+                        </div>
+                    `;
+
+                    return;
+
+                }
+
+                document.getElementById(
+                    'adminName'
+                ).textContent =
+                    `Admin: ${user.name}`;
+
+                loadUsers();
+
+            } catch (err) {
+
+                console.error(err);
+
+                window.location.href =
+                    '/login.html';
+
+            }
+
+        }
+
+
+        /* =====================================================
+           LOAD USERS
+           ===================================================== */
+
+        async function loadUsers() {
+
+            const container =
+                document.getElementById(
+                    'usersContainer'
+                );
+
+            container.innerHTML = `
+                <div class="loading">
+                    Loading users...
+                </div>
+            `;
+
+            try {
+
+                const res =
+                    await fetch('/api/admin/users');
+
+                if (res.status === 401) {
+
+                    window.location.href =
+                        '/login.html';
+
+                    return;
+
+                }
+
+                if (res.status === 403) {
+
+                    showMessage(
+                        'Admin access required.',
+                        'error'
+                    );
+
+                    return;
+
+                }
+
+                if (!res.ok) {
+
+                    throw new Error(
+                        'Could not load users'
+                    );
+
+                }
+
+                const users =
+                    await res.json();
+
+
+                if (!Array.isArray(users) ||
+                    users.length === 0) {
+
+                    container.innerHTML = `
+                        <div class="empty">
+                            No registered users found.
+                        </div>
+                    `;
+
+                    return;
+
+                }
+
+
+                let html = `
+                    <table class="user-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    User
+                                </th>
+
+                                <th>
+                                    Email
+                                </th>
+
+                                <th>
+                                    Formulation Access
+                                </th>
+
+                                <th>
+                                    Action
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+                `;
+
+
+                users.forEach(user => {
+
+                    if (user.isAdmin) {
+
+                        html += `
+                            <tr>
+
+                                <td class="user-name-cell">
+                                    ${escapeHTML(user.name)}
+                                </td>
+
+                                <td class="email-cell">
+                                    ${escapeHTML(user.email)}
+                                </td>
+
+                                <td>
+                                    <span class="
+                                        status
+                                        admin-status
+                                    ">
+                                        ADMIN
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <span class="admin-label">
+                                        Permanent Access
+                                    </span>
+                                </td>
+
+                            </tr>
+                        `;
+
+                        return;
+
+                    }
+
+
+                    const allowed =
+                        user.formulationAccess === true;
+
+
+                    html += `
+                        <tr>
+
+                            <td class="user-name-cell">
+                                ${escapeHTML(user.name)}
+                            </td>
+
+                            <td class="email-cell">
+                                ${escapeHTML(user.email)}
+                            </td>
+
+                            <td>
+
+                                <span class="
+                                    status
+                                    ${allowed
+                                        ? 'granted'
+                                        : 'restricted'}
+                                ">
+
+                                    ${allowed
+                                        ? '✓ Granted'
+                                        : '✕ Restricted'}
+
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                <button
+                                    class="
+                                        action-btn
+                                        ${allowed
+                                            ? 'revoke-btn'
+                                            : 'grant-btn'}
+                                    "
+                                    onclick="
+                                        changeAccess(
+                                            '${user.id}',
+                                            ${!allowed}
+                                        )
+                                    "
+                                >
+
+                                    ${allowed
+                                        ? 'Revoke Access'
+                                        : 'Grant Access'}
+
+                                </button>
+
+                            </td>
+
+                        </tr>
+                    `;
+
+                });
+
+
+                html += `
+                        </tbody>
+                    </table>
+                `;
+
+                container.innerHTML = html;
+
+            } catch (err) {
+
+                console.error(err);
+
+                container.innerHTML = `
+                    <div class="empty">
+                        Could not load users.
+                        Please refresh the page.
+                    </div>
+                `;
+
+            }
+
+        }
+
+
+        /* =====================================================
+           GRANT / REVOKE ACCESS
+           ===================================================== */
+
+        async function changeAccess(
+            userId,
+            allowed
+        ) {
+
+            const action =
+                allowed
+                    ? 'grant'
+                    : 'revoke';
+
+
+            const confirmed =
+                confirm(
+                    allowed
+                        ? 'Grant Formulation Tool access to this user?'
+                        : 'Revoke Formulation Tool access from this user?'
+                );
+
+
+            if (!confirmed) {
+                return;
+            }
+
+
+            try {
+
+                const res =
+                    await fetch(
+                        '/api/admin/formulation-access',
+                        {
+                            method: 'POST',
+
+                            headers: {
+                                'Content-Type':
+                                    'application/json'
+                            },
+
+                            body: JSON.stringify({
+                                userId,
+                                allowed
+                            })
+                        }
+                    );
+
+
+                const data =
+                    await res.json();
+
+
+                if (!res.ok) {
+
+                    throw new Error(
+                        data.error ||
+                        `Could not ${action} access`
+                    );
+
+                }
+
+
+                showMessage(
+                    data.message ||
+                    (
+                        allowed
+                            ? 'Access granted.'
+                            : 'Access revoked.'
+                    ),
+                    'success'
+                );
+
+
+                loadUsers();
+
+            } catch (err) {
+
+                console.error(err);
+
+                showMessage(
+                    err.message ||
+                    'Something went wrong.',
+                    'error'
+                );
+
+            }
+
+        }
+
+
+        /* =====================================================
+           HTML ESCAPE
+           ===================================================== */
+
+        function escapeHTML(value) {
+
+            return String(value ?? '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+
+        }
+
+
+        /* =====================================================
+           LOGOUT
+           ===================================================== */
+
+        async function logout() {
+
+            try {
+
+                await fetch(
+                    '/api/auth/logout',
+                    {
+                        method: 'POST'
+                    }
+                );
+
+            } catch (err) {
+
+                console.error(err);
+
+            }
+
+            window.location.href =
+                '/login.html';
+
+        }
+
+
+        /* =====================================================
+           START
+           ===================================================== */
+
+        loadAdmin();
+
+    </script>
+
+</body>
+
+</html>
+
