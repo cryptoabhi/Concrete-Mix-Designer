@@ -1,0 +1,783 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Concrete Technology Tools</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        /* Header */
+
+        .header {
+            height: 70px;
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 35px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .app-logo {
+            width: 45px;
+            height: 45px;
+            object-fit: contain;
+            display: block;
+        }
+
+        .brand-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-name {
+            font-size: 14px;
+            color: #475569;
+        }
+
+        .logout-btn {
+            border: none;
+            background: #ef4444;
+            color: white;
+            padding: 9px 16px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .logout-btn:hover {
+            background: #dc2626;
+        }
+
+        /* Main */
+
+        .container {
+            max-width: 1150px;
+            margin: auto;
+            padding: 55px 25px 70px;
+        }
+
+        .heading {
+            text-align: center;
+            margin-bottom: 45px;
+        }
+
+        .heading h1 {
+            font-size: 34px;
+            color: #172033;
+            margin-bottom: 10px;
+        }
+
+        .heading p {
+            font-size: 16px;
+            color: #64748b;
+        }
+
+        /* Cards */
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+        }
+
+        .tool-card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            min-height: 220px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e5e7eb;
+            transition: all 0.25s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.13);
+        }
+
+        /* Featured card */
+
+        .featured {
+            border: 2px solid #2563eb;
+            background: linear-gradient(145deg, #ffffff, #f0f6ff);
+        }
+
+        .badge {
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            background: #2563eb;
+            color: white;
+            font-size: 11px;
+            font-weight: bold;
+            padding: 5px 9px;
+            border-radius: 20px;
+        }
+
+        .icon {
+            width: 58px;
+            height: 58px;
+            border-radius: 14px;
+            background: #eff6ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            margin-bottom: 20px;
+        }
+
+        .tool-card h2 {
+            font-size: 21px;
+            margin-bottom: 10px;
+            color: #172033;
+        }
+
+        .tool-card p {
+            color: #64748b;
+            line-height: 1.6;
+            font-size: 14px;
+            margin-bottom: 22px;
+        }
+
+        .open-btn {
+            display: inline-block;
+            padding: 10px 18px;
+            border-radius: 7px;
+            background: #2563eb;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+        }
+
+        .open-btn:hover {
+            background: #1d4ed8;
+        }
+
+        .secondary-btn {
+            background: #475569;
+        }
+
+        .secondary-btn:hover {
+            background: #334155;
+        }
+
+        /* Locked Formulation */
+
+        .locked-card {
+            border: 2px solid #f59e0b;
+            background: linear-gradient(145deg, #ffffff, #fffbeb);
+        }
+
+        .locked-badge {
+            background: #f59e0b;
+        }
+
+        .locked-icon {
+            background: #fff7ed;
+        }
+
+        .request-btn {
+            background: #f59e0b;
+        }
+
+        .request-btn:hover {
+            background: #d97706;
+        }
+
+        .access-message {
+            display: none;
+            margin-top: -8px;
+            margin-bottom: 18px;
+            font-size: 13px;
+            color: #92400e;
+        }
+
+        .coming-soon {
+            opacity: 0.75;
+            cursor: default;
+        }
+
+        .coming-soon:hover {
+            transform: none;
+        }
+
+        .coming-badge {
+            background: #94a3b8;
+        }
+
+        /* Footer */
+
+        .footer {
+            text-align: center;
+            margin-top: 55px;
+            color: #94a3b8;
+            font-size: 13px;
+        }
+
+        /* Mobile */
+
+        @media (max-width: 750px) {
+
+            .header {
+                padding: 0 18px;
+            }
+
+            .brand-name {
+                font-size: 17px;
+            }
+
+            .user-name {
+                display: none;
+            }
+
+            .container {
+                padding: 35px 18px 50px;
+            }
+
+            .heading h1 {
+                font-size: 28px;
+            }
+
+            .tools-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tool-card {
+                min-height: auto;
+            }
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <!-- HEADER -->
+
+    <header class="header">
+
+        <div class="brand">
+
+            <img
+                src="/logo.png"
+                alt="Concrete Technology Tools"
+                class="app-logo"
+            >
+
+            <div class="brand-name">
+                Concrete Technology Tools
+            </div>
+
+        </div>
+
+        <div class="user-section">
+
+            <span class="user-name" id="userName">
+                Welcome
+            </span>
+
+            <button
+                class="logout-btn"
+                onclick="logout()"
+            >
+                Logout
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <!-- MAIN CONTENT -->
+
+    <main class="container">
+
+        <div class="heading">
+
+    <h1>Select a Tool</h1>
+
+    <p>
+        Choose a concrete technology tool to continue
+    </p>
+
+    <button
+        id="adminPanelButton"
+        class="open-btn"
+        style="display:none; margin-top:20px;"
+        onclick="window.location.href='/admin.html'"
+    >
+        🔐 Admin Panel
+    </button>
+
+</div>
+
+        <div class="tools-grid">
+
+
+            <!-- FORMULATION SUGGESTER -->
+
+            <div
+                class="tool-card featured"
+                id="formulationCard"
+                onclick="openFormulation()"
+            >
+
+                <span
+                    class="badge"
+                    id="formulationBadge"
+                >
+                    MAIN TOOL
+                </span>
+
+                <div
+                    class="icon"
+                    id="formulationIcon"
+                >
+                    🧪
+                </div>
+
+                <h2>
+                    Formulation Suggester
+                </h2>
+
+                <p>
+                    Develop and evaluate admixture formulations
+                    based on your required concrete performance.
+                </p>
+
+                <div
+                    class="access-message"
+                    id="accessMessage"
+                >
+                    🔒 Access is restricted. Contact Abhishek
+                    to request access.
+            
+                </div>
+
+                <button
+                    class="open-btn"
+                    id="formulationButton"
+                    onclick="event.stopPropagation(); openFormulation()"
+                >
+                    Open Tool →
+                </button>
+
+            </div>
+
+
+            <!-- CONCRETE MIX DESIGNER -->
+
+            <div
+                class="tool-card"
+                onclick="openMixDesigner()"
+            >
+
+                <div class="icon">
+                    🧱
+                </div>
+
+                <h2>
+                    Concrete Mix Designer
+                </h2>
+
+                <p>
+                    Design concrete mixes, calculate material
+                    quantities, perform SSD corrections and manage
+                    concrete trials.
+                </p>
+
+                <button
+                    class="open-btn secondary-btn"
+                    onclick="event.stopPropagation(); openMixDesigner()"
+                >
+                    Open Tool →
+                </button>
+
+            </div>
+
+
+            <!-- SIEVE ANALYSIS -->
+
+            <div
+                class="tool-card"
+                onclick="openSieveAnalysis()"
+            >
+
+                <div class="icon">
+                    📐
+                </div>
+
+                <h2>
+                    Aggregate Sieve Analysis
+                </h2>
+
+                <p>
+                    Perform aggregate sieve analysis and calculate
+                    grading information for concrete mix design.
+                </p>
+
+                <button
+                    class="open-btn secondary-btn"
+                    onclick="event.stopPropagation(); openSieveAnalysis()"
+                >
+                    Open Tool →
+                </button>
+
+            </div>
+
+
+            <!-- TRIAL COMPARISON -->
+
+            <div class="tool-card coming-soon">
+
+                <span class="badge coming-badge">
+                    COMING SOON
+                </span>
+
+                <div class="icon">
+                    📊
+                </div>
+
+                <h2>
+                    Trial Comparison
+                </h2>
+
+                <p>
+                    Compare multiple concrete trials and review
+                    changes in materials, dosage, slump, flow,
+                    strength and other parameters.
+                </p>
+
+                <button
+                    class="open-btn secondary-btn"
+                    disabled
+                >
+                    Coming Soon
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <div class="footer">
+            Concrete Technology Tools • Created by Abhishek
+        </div>
+
+    </main>
+
+
+    <script>
+
+        /* =====================================================
+           OPEN CONCRETE MIX DESIGNER
+           ===================================================== */
+
+        function openMixDesigner() {
+
+            window.location.href = "app.html";
+
+        }
+
+
+        /* =====================================================
+           FORMULATION SUGGESTER
+           ===================================================== */
+
+        function openFormulation() {
+
+            window.location.href = "formulation.html";
+
+        }
+
+
+        /* =====================================================
+           AGGREGATE SIEVE ANALYSIS
+           ===================================================== */
+
+        function openSieveAnalysis() {
+
+            alert(
+                "Aggregate Sieve Analysis tool will be added next."
+            );
+
+        }
+
+
+        /* =====================================================
+           LOGOUT
+           ===================================================== */
+
+        async function logout() {
+
+            try {
+
+                await fetch(
+                    '/api/auth/logout',
+                    {
+                        method: 'POST'
+                    }
+                );
+
+                window.location.href = '/login.html';
+
+            } catch (err) {
+
+                window.location.href = '/login.html';
+
+            }
+
+        }
+
+
+        /* =====================================================
+           LOAD USER NAME
+           ===================================================== */
+
+  async function loadUserName() {
+
+    try {
+
+        const res = await fetch('/api/auth/me');
+
+        if (!res.ok) {
+            window.location.href = '/login.html';
+            return;
+        }
+
+        const user = await res.json();
+
+        const userName =
+            document.getElementById('userName');
+
+        if (user && user.name) {
+            userName.textContent =
+                `Welcome, ${user.name}`;
+        } else {
+            userName.textContent =
+                'Welcome, Engineer';
+        }
+
+        /* =================================================
+           SHOW ADMIN PANEL ONLY TO ADMIN
+           ================================================= */
+
+        const adminEmail =
+            'kordeabhishek383@gmail.com';
+
+        if (
+            user &&
+            user.email &&
+            user.email.toLowerCase() ===
+            adminEmail.toLowerCase()
+        ) {
+
+            const adminButton =
+                document.getElementById('adminPanelButton');
+
+            if (adminButton) {
+                adminButton.style.display = 'inline-block';
+            }
+
+        }
+
+    } catch (err) {
+
+        console.error(
+            'Could not load user information:',
+            err
+        );
+
+    }
+
+}
+
+        /* =====================================================
+           CHECK FORMULATION ACCESS
+           ===================================================== */
+
+        async function checkFormulationAccess() {
+
+            const card =
+                document.getElementById(
+                    'formulationCard'
+                );
+
+            const badge =
+                document.getElementById(
+                    'formulationBadge'
+                );
+
+            const icon =
+                document.getElementById(
+                    'formulationIcon'
+                );
+
+            const button =
+                document.getElementById(
+                    'formulationButton'
+                );
+
+            const message =
+                document.getElementById(
+                    'accessMessage'
+                );
+
+
+            try {
+
+                const res = await fetch(
+                    '/api/auth/formulation-access'
+                );
+
+
+                /* ---------------------------------------------
+                   NOT LOGGED IN
+                   --------------------------------------------- */
+
+                if (res.status === 401) {
+
+                    window.location.href =
+                        '/login.html';
+
+                    return;
+
+                }
+
+
+                if (!res.ok) {
+
+                    console.error(
+                        'Could not check formulation access'
+                    );
+
+                    return;
+
+                }
+
+
+                const data = await res.json();
+
+
+                /* ---------------------------------------------
+                   ACCESS GRANTED
+                   --------------------------------------------- */
+
+                if (data.allowed === true) {
+
+                    card.classList.add('featured');
+                    card.classList.remove('locked-card');
+
+                    badge.textContent =
+                        data.admin
+                            ? 'ADMIN ACCESS'
+                            : 'ACCESS GRANTED';
+
+                    badge.classList.remove(
+                        'locked-badge'
+                    );
+
+                    icon.textContent = '🧪';
+                    icon.classList.remove(
+                        'locked-icon'
+                    );
+
+                    button.textContent =
+                        'Open Tool →';
+
+                    button.classList.remove(
+                        'request-btn'
+                    );
+
+                    message.style.display =
+                        'none';
+
+                    return;
+
+                }
+
+
+                /* ---------------------------------------------
+                   ACCESS NOT GRANTED
+                   --------------------------------------------- */
+
+                card.classList.remove('featured');
+                card.classList.add('locked-card');
+
+                badge.textContent =
+                    'ACCESS REQUIRED';
+
+                badge.classList.add(
+                    'locked-badge'
+                );
+
+                icon.textContent = '🔒';
+                icon.classList.add(
+                    'locked-icon'
+                );
+
+                button.textContent =
+                    '🔒 Request Access';
+
+                button.classList.add(
+                    'request-btn'
+                );
+
+                message.style.display =
+                    'block';
+
+            } catch (err) {
+
+                console.error(
+                    'Formulation access check failed:',
+                    err
+                );
+
+            }
+
+        }
+
+
+        /* =====================================================
+           INITIALIZE PAGE
+           ===================================================== */
+
+        loadUserName();
+        checkFormulationAccess();
+
+    </script>
+
+</body>
+
+</html>
