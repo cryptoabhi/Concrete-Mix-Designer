@@ -82,7 +82,7 @@ async function submitAuth(url, payload, submitBtn){
       submitBtn.disabled = false;
       return;
     }
-    window.location.href = '/app.html';
+    window.location.href = '/select-tool.html';
   }catch(err){
     showError('Could not reach the server. Is it running?');
     submitBtn.disabled = false;
@@ -107,7 +107,7 @@ document.getElementById('signupForm').addEventListener('submit', (e)=>{
 });
 
 // If already signed in, skip straight to the app.
-fetch('/api/auth/me').then(r=>{ if(r.status===200) window.location.href='/app.html'; });
+fetch('/api/auth/me').then(r=>{ if(r.status===200) window.location.href='/select-tool.html'; });
 </script>
 
 </body>
