@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Formulation Suggester - Concrete Technology Tools</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f4f6f8;color:#1f2937}.top{background:#111827;color:#fff;padding:12px 22px;display:flex;justify-content:space-between;align-items:center;gap:10px;position:sticky;top:0;z-index:5}.top b{font-size:18px}.actions{display:flex;gap:7px;flex-wrap:wrap}button{border:0;border-radius:7px;padding:9px 13px;font-weight:700;cursor:pointer}.blue{background:#2563eb;color:#fff}.green{background:#16a34a;color:#fff}.orange{background:#d97706;color:#fff}.red{background:#dc2626;color:#fff}.gray{background:#6b7280;color:#fff}.light{background:#e5e7eb}.wrap{width:95%;max-width:1500px;margin:20px auto 50px}.card{background:#fff;border-radius:12px;padding:20px;margin-bottom:18px;box-shadow:0 2px 8px #00000012}.card h2{margin:0 0 15px;border-bottom:1px solid #e5e7eb;padding-bottom:10px;font-size:19px}.head h1{margin:0 0 5px}.muted{color:#6b7280;font-size:13px}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:13px}.field label{display:block;font-size:12px;font-weight:700;margin-bottom:6px;color:#374151}.field input,.field select,.field textarea{width:100%;padding:9px;border:1px solid #d1d5db;border-radius:7px;background:#fff}.field textarea{min-height:80px}.checks{display:flex;gap:20px;margin-top:15px}.checks label{font-weight:700;font-size:13px}.note{padding:11px;background:#eff6ff;border-left:4px solid #2563eb;font-size:13px;margin-bottom:14px}.warn{padding:11px;background:#fff7ed;border-left:4px solid #f97316;font-size:13px;margin-bottom:14px}.tablewrap{overflow:auto}.tbl{width:100%;border-collapse:collapse}.tbl th,.tbl td{border:1px solid #e5e7eb;padding:8px;text-align:center}.tbl th{background:#f3f4f6;font-size:12px}.tbl input{width:95px;padding:7px;text-align:right;border:1px solid #d1d5db;border-radius:5px}.left{text-align:left!important}.total{font-weight:700;background:#f9fafb}.balance{padding:12px;border-radius:8px;margin-top:12px;font-weight:700}.ok{background:#dcfce7;color:#166534;border:1px solid #86efac}.bad{background:#fee2e2;color:#991b1b;border:1px solid #fca5a5}.btnrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}.sample{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:15px}.metric{background:#f9fafb;border:1px solid #e5e7eb;padding:12px;border-radius:8px}.metric small{display:block;color:#6b7280;margin-bottom:5px}.metric b{font-size:18px}.dataset{min-width:1150px}.badge{padding:4px 7px;border-radius:15px;font-size:11px;font-weight:700}.draft{background:#e5e7eb}.completed{background:#dbeafe;color:#1d4ed8}.validated{background:#dcfce7;color:#166534}.rejected{background:#fee2e2;color:#991b1b}.empty{text-align:center;color:#6b7280;padding:25px}@media(max-width:1100px){.grid,.sample{grid-template-columns:repeat(2,1fr)}}@media(max-width:650px){.grid,.sample{grid-template-columns:1fr}.top{flex-direction:column}}
+</style>
+</head>
+<body>
+<header class="top"><b>Concrete Technology Tools</b><div class="actions"><button class="light" onclick="location.href='/select-tool.html'">Dashboard</button><button class="green" onclick="saveTrial()">Save Trial Dataset</button><button class="orange" onclick="exportJSON()">Export JSON</button><button class="red" onclick="logout()">Logout</button></div></header>
+<main class="wrap">
+<section class="card head"><h1>Formulation Suggester</h1><div class="muted">PCE Admixture Base-Formulation Calculator & Trial Dataset</div><div class="muted" style="margin-top:7px">Created by Abhishek <span id="userName"></span></div></section>
+<section class="card"><h2>1. Trial / Requirement</h2><div class="grid">
+<div class="field"><label>Trial Number</label><input id="trialNo" placeholder="TR-001"></div><div class="field"><label>Trial Date</label><input id="date" type="date"></div>
+<div class="field"><label>Concrete Grade</label><select id="grade"><option>20</option><option>25</option><option selected>30</option><option>35</option><option>40</option><option>45</option><option>50</option><option>60</option><option>70</option><option>80</option></select></div>
+<div class="field"><label>PCE Level</label><select id="pce"><option>Mid</option><option selected>High</option></select></div>
+<div class="field"><label>Retention Type</label><select id="type"><option>Flow</option><option selected>Slump</option><option>SCC</option><option>PQC</option></select></div>
+<div class="field"><label>Target Workability</label><input id="target" type="number" value="150"></div><div class="field"><label>Workability Unit</label><select id="unit"><option>mm slump</option><option>mm flow</option></select></div>
+<div class="field"><label>Retention Required (hr)</label><input id="retention" type="number" value="3" min="0" step="0.5"></div>
+<div class="field"><label>W/C Ratio</label><input id="wc" type="number" value="0.45" step="0.01"></div><div class="field"><label>Cement Brand</label><input id="cement" placeholder="Ultratech / ACC / Wonder"></div>
+<div class="field"><label>Cement Type</label><select id="cementType"><option>OPC</option><option>PPC</option><option>PSC</option><option>Blended</option><option>Other</option></select></div>
+<div class="field"><label>Sand Silt Content (%)</label><input id="silt" type="number" value="2" step="0.1"></div>
+<div class="field"><label>Target Dosage (% on cementitious)</label><input id="dosage" type="number" value="1" min="0.1" step="0.01"></div><div class="field"><label>Client / Project</label><input id="client"></div>
+<div class="field"><label>Trial Location</label><input id="location"></div><div class="field"><label>Tested By</label><input id="testedBy"></div>
+</div><div class="checks"><label><input type="checkbox" id="ligno"> Include Ligno</label><label><input type="checkbox" id="micro"> Include Micro Air</label><label><input type="checkbox" id="citric"> Add Citric Acid Retarder</label><label><input type="checkbox" id="sn"> Add SN Sodium Nitrate</label><label><input type="checkbox" id="tea"> Add TEA Accelerator</label></div></section>
+<section class="card"><h2>2. Suggested / Editable Formulation</h2><div class="note"><b>Logic:</b> this version uses a mathematical rule engine until ML is available. Retention time, W/C ratio, silt content and target dosage continuously change the WR / Hybrid / SR / SSR polymer balance and GN1 / GN2 retarder level. Polymer and retarder dosages are rounded to the nearest <b>0.5%</b>. Citric acid, SN and TEA are <b>never auto-suggested</b>; they are included only when you explicitly enable them.</div>
+<div class="tablewrap"><table class="tbl"><thead><tr><th>Component</th><th class="left">Role</th><th>% w/w</th><th>200 g</th><th>300 g</th><th>Remove</th></tr></thead><tbody id="formBody"></tbody><tfoot><tr class="total"><td colspan="2">Solid %</td><td id="solid">0.00%</td><td></td><td id="g200">0.00 g</td><td id="g300">0.00 g</td><td></td></tr><tr class="total"><td colspan="2">Water Balance</td><td id="water">0.00%</td><td></td><td id="w200">0.00 g</td><td id="w300">0.00 g</td><td></td></tr><tr class="total"><td colspan="2">TOTAL</td><td id="total">0.00%</td><td></td><td id="t200">0.00 g</td><td id="t300">0.00 g</td><td></td></tr></tfoot></table></div>
+<div id="balance" class="balance bad">Generate a formulation.</div><div class="btnrow"><button class="blue" onclick="suggest()">Generate Suggested Formulation</button><button class="orange" onclick="normalize()">Normalize to 100%</button><button class="gray" onclick="resetFormula()">Reset</button><button class="light" onclick="addComponent()">+ Add Component</button></div>
+<div class="sample"><div class="field"><label>Required Sample Size (g)</label><input id="sample" type="number" value="300" min="1" step="0.1" oninput="calc()"></div><div class="metric"><small>Total Sample</small><b id="sampleTotal">—</b></div><div class="metric"><small>Total Solid %</small><b id="sampleSolids">—</b></div><div class="metric"><small>Water</small><b id="sampleWater">—</b></div></div>
+</section>
+<section class="card"><h2>3. Raw Material Quantity for Required Sample</h2><div class="note">Enter any batch size such as <b>200 g, 300 g, 500 g, 1 kg</b>. Quantities are calculated directly from the formulation percentage. Change the sample size and the table updates automatically.</div><div class="tablewrap"><table class="tbl"><thead><tr><th>Raw Material</th><th>%</th><th>Quantity</th></tr></thead><tbody id="qtyBody"></tbody><tfoot><tr class="total"><td>TOTAL</td><td id="qtyPct">100.00%</td><td id="qtyTotal">—</td></tr></tfoot></table></div></section>
+<section class="card"><h2>4. Actual Trial Results</h2><div class="warn">Record actual laboratory/RMC observations. These become the future ML dataset.</div><div class="tablewrap"><table class="tbl"><thead><tr><th>Age</th><th>Actual Slump / Flow</th><th>Observation</th></tr></thead><tbody id="resultsBody"></tbody></table></div><div class="grid" style="margin-top:15px"><div class="field"><label>Retention Achieved (hr)</label><input id="achieved" type="number" step="0.5"></div><div class="field"><label>Rheology</label><select id="rheology"><option></option><option>Free</option><option>Slightly Sticky</option><option>Sticky</option><option>Cohesive</option><option>Harsh</option><option>Segregating</option></select></div><div class="field"><label>Bleeding</label><select id="bleeding"><option></option><option>None</option><option>Low</option><option>Medium</option><option>High</option></select></div><div class="field"><label>Segregation</label><select id="segregation"><option></option><option>None</option><option>Low</option><option>Medium</option><option>High</option></select></div><div class="field"><label>Setting Observation</label><select id="setting"><option></option><option>Normal</option><option>Delayed</option><option>Fast</option></select></div><div class="field"><label>Trial Status</label><select id="status"><option>Draft</option><option>Trial Completed</option><option>Validated</option><option>Rejected</option></select></div></div><div class="field" style="margin-top:15px"><label>Remarks</label><textarea id="remarks" placeholder="Trial observations / modifications required / final conclusion"></textarea></div></section>
+<section class="card"><h2>5. Trial Dataset</h2><div class="btnrow"><input id="search" placeholder="Search trial / cement / client / grade" oninput="renderDataset()" style="max-width:300px;padding:9px;border:1px solid #d1d5db;border-radius:7px"><button class="green" onclick="exportJSON()">Export JSON</button><button class="blue" onclick="exportCSV()">Export CSV</button><button class="red" onclick="clearDataset()">Clear Dataset</button></div><div class="tablewrap" style="margin-top:12px"><table class="tbl dataset"><thead><tr><th>Trial</th><th>Date</th><th>Grade</th><th>Cement</th><th>W/C</th><th>Dosage</th><th>Target</th><th>3 hr</th><th>Retention</th><th>Rheology</th><th>Status</th><th>Action</th></tr></thead><tbody id="datasetBody"></tbody></table></div></section>
+</main>
+<script>
+const CFG={
+ referenceDosage:0.80,
+ suggestionLimit:{EW31:30,EW29:30,EW30:30,EW36:30,GN1:10,GN2:2.5,Ligno:3,CitricAcid:3,SN:2,TEA:2,DF:1,MicroAir:1,VMA:1},
+ role:{EW31:'Water Reducer (WR)',EW29:'Hybrid PCE (HR)',EW30:'Slump Retainer (SR)',EW36:'Super Slump Retainer (SSR)',GN1:'Gluconate Retarder',GN2:'Sugar Retarder',Ligno:'Lignosulphonate',CitricAcid:'Citric Acid Retarder',SN:'Sodium Nitrate Accelerator',TEA:'TEA Accelerator',DF:'Defoamer',MicroAir:'Micro Air',VMA:'Viscosity Modifier'},
+ solid:{EW31:.50,EW29:.50,EW30:.50,EW36:.50,GN1:1,GN2:1,Ligno:1,CitricAcid:1,SN:1,TEA:1,DF:1,MicroAir:1,VMA:1}
+};
+let formulation={};let dataset=JSON.parse(localStorage.getItem('formulationTrialDataset')||'[]');let editId=null;
+const $=id=>document.getElementById(id);const num=id=>{const x=parseFloat($(id)?.value);return Number.isFinite(x)?x:0};
+function init(){ $('date').value=new Date().toISOString().slice(0,10);renderResults();resetFormula();renderDataset();loadUser(); }
+async function loadUser(){try{const r=await fetch('/api/auth/me');if(r.ok){const d=await r.json();const u=d.user||d;$('userName').textContent=(u.name||u.fullName||u.username)?' • '+(u.name||u.fullName||u.username):'';}}catch(e){}}
+function renderResults(){['Initial','30 min','1 hr','2 hr','3 hr','4 hr','5 hr'].forEach((age,i)=>{let id=['initial','m30','h1','h2','h3','h4','h5'][i];$('resultsBody').insertAdjacentHTML('beforeend',`<tr><td>${age}</td><td><input type="number" id="r_${id}" step="1"></td><td><input id="o_${id}" placeholder="Observation"></td></tr>`);});}
+function isRoundedComp(c){return ['EW31','EW29','EW30','EW36','GN1','GN2','Ligno','CitricAcid'].includes(c)}
+function roundRule(c,x){return isRoundedComp(c)?Math.round(x*2)/2:+x.toFixed(2)}
+function renderForm(){let b=$('formBody');b.innerHTML='';Object.keys(formulation).forEach(c=>{let step=isRoundedComp(c)?0.5:0.01;b.insertAdjacentHTML('beforeend',`<tr><td><b>${esc(c)}</b></td><td class="left">${esc(CFG.role[c]||'Custom')}</td><td><input type="number" min="0" step="${step}" value="${Number(formulation[c]).toFixed(isRoundedComp(c)?1:2)}" onchange="changeComp('${escAttr(c)}',this.value)"></td><td>${fmtg(formulation[c],200)}</td><td>${fmtg(formulation[c],300)}</td><td><button class="red" style="padding:5px 8px" onclick="removeComp('${escAttr(c)}')">×</button></td></tr>`)});calc();}
+function changeComp(c,v){let x=parseFloat(v);if(!Number.isFinite(x))x=0;formulation[c]=Math.max(0,roundRule(c,x));renderForm();}
+function removeComp(c){delete formulation[c];renderForm();}
+function addComponent(){let c=prompt('Component name:');if(!c)return;c=c.trim();if(!c||formulation[c]!==undefined)return alert('Component already exists.');formulation[c]=0;renderForm();}
+function active(){return Object.values(formulation).reduce((a,b)=>a+(Number(b)||0),0)}
+function solidTotal(){return Object.entries(formulation).reduce((a,[c,v])=>a+(Number(v)||0)*(CFG.solid[c]??1),0)}
+function calc(){let a=active(),w=Math.max(0,100-a),valid=a<=100.000001,s=solidTotal();$('solid').textContent=s.toFixed(2)+'%';$('water').textContent=w.toFixed(2)+'%';$('total').textContent=(a+w).toFixed(2)+'%';$('g200').textContent=valid?fmtg(w,200):'—';$('g300').textContent=valid?fmtg(w,300):'—';$('w200').textContent=valid?fmtg(w,200):'—';$('w300').textContent=valid?fmtg(w,300):'—';$('t200').textContent=valid?'200.00 g':'—';$('t300').textContent=valid?'300.00 g':'—';let box=$('balance');if(valid){box.className='balance ok';box.innerHTML=`✓ Solid ${s.toFixed(2)}% | Formulation ${a.toFixed(2)}% + Water ${w.toFixed(2)}% = <b>100.00%</b>`;}else{box.className='balance bad';box.innerHTML=`❌ <b>INVALID:</b> formulation is ${a.toFixed(2)}%. Reduce by ${(a-100).toFixed(2)}%.`;}let sm=num('sample');$('sampleTotal').textContent=valid?sm.toFixed(2)+' g':'—';$('sampleSolids').textContent=valid?(sm*s/100).toFixed(3)+' g':'—';$('sampleWater').textContent=valid?(sm*w/100).toFixed(3)+' g':'—';renderQty();}
+function fmtg(p,size){return (Number(p||0)*size/100).toFixed(3)+' g'}
+function renderQty(){let b=$('qtyBody');b.innerHTML='';let sm=num('sample'),a=active(),w=Math.max(0,100-a);if(a>100){$('qtyPct').textContent='INVALID';$('qtyTotal').textContent='—';return}Object.keys(formulation).forEach(c=>b.insertAdjacentHTML('beforeend',`<tr><td class="left"><b>${esc(c)}</b></td><td>${Number(formulation[c]).toFixed(isRoundedComp(c)?1:2)}%</td><td>${fmtg(formulation[c],sm)}</td></tr>`));b.insertAdjacentHTML('beforeend',`<tr><td class="left"><b>Water</b></td><td>${w.toFixed(2)}%</td><td>${fmtg(w,sm)}</td></tr>`);$('qtyPct').textContent='100.00%';$('qtyTotal').textContent=sm.toFixed(3)+' g';}
+function normalize(){let a=active();if(a<=0)return alert('No active ingredients.');if(a<=100)return alert('Formulation is already within 100%.');let f=100/a;Object.keys(formulation).forEach(c=>formulation[c]=roundRule(c,formulation[c]*f));renderForm();}
+function resetFormula(){formulation={EW31:6,EW29:6,EW30:16,EW36:16,GN1:10,GN2:1,DF:.02};renderForm();}
+function clamp(x,a,b){return Math.max(a,Math.min(b,x));}
+function roundHalf(x){return Math.round(x*2)/2;}
+function interpolate(r,points){for(let i=0;i<points.length-1;i++){let a=points[i],b=points[i+1];if(r<=b.x){let t=(r-a.x)/(b.x-a.x);return a.y+(b.y-a.y)*t;}}return points[points.length-1].y;}
+function suggest(){
+ const grade=num('grade'),hours=Math.max(0,num('retention')),silt=Math.max(0,num('silt')),wc=Math.max(0.20,num('wc')),dose=Math.max(0.10,num('dosage')||0.80),type=val('type'),pce=val('pce');
+ const retentionFactor=clamp(hours/5,0,1.40);
+ const siltFactor=clamp(silt/6,0,1.50);
+ const wcFactor=clamp((0.50-wc)/0.15,-1.00,1.75);
+ const dosageRatio=CFG.referenceDosage/dose;
+ const dosageFactor=clamp(dosageRatio-1,-0.55,1.75);
+ const flowFactor=(type==='Flow'||val('unit')==='mm flow')?1:0;
+ const specialFactor=(type==='SCC'||type==='PQC')?1:0;
+
+ // Continuous demand: lower W/C increases WR demand; higher dosage allows dilution.
+ let demand=0.34*retentionFactor+0.18*siltFactor+0.22*wcFactor+0.18*dosageFactor+0.10*flowFactor+0.08*specialFactor;
+ demand=clamp(demand,0,1.80);
+
+ // Higher target dosage -> more diluted product. Lower dosage -> more concentrated product.
+ const dilutionFactor=clamp(dosageRatio,0.45,1.80);
+ let polymerBase=pce==='Mid'?30:42;
+ let polymerDemandFactor=1+0.20*retentionFactor+0.12*siltFactor+0.18*wcFactor+0.10*flowFactor+0.06*specialFactor;
+ let polymerTotal=clamp(polymerBase*polymerDemandFactor*dilutionFactor,18,68);
+
+ // Distribution: lower W/C -> more WR; retention/flow -> more SR/SSR.
+ let wr=0.56-0.27*retentionFactor-0.16*flowFactor-0.08*specialFactor+0.24*wcFactor-0.04*siltFactor;
+ let hr=0.24-0.01*retentionFactor+0.02*flowFactor+0.01*siltFactor-0.04*wcFactor;
+ let sr=0.14+0.18*retentionFactor+0.10*flowFactor+0.05*specialFactor+0.02*siltFactor;
+ let ssr=0.06+0.20*retentionFactor+0.18*flowFactor+0.07*specialFactor+0.02*siltFactor;
+ wr=Math.max(0.02,wr);hr=Math.max(0.02,hr);sr=Math.max(0.04,sr);ssr=Math.max(0.02,ssr);
+ let shareSum=wr+hr+sr+ssr;wr/=shareSum;hr/=shareSum;sr/=shareSum;ssr/=shareSum;
+
+ let base={EW31:roundHalf(polymerTotal*wr),EW29:roundHalf(polymerTotal*hr),EW30:roundHalf(polymerTotal*sr),EW36:roundHalf(polymerTotal*ssr)};
+
+ // Retarder relationship. Automatic GN1/GN2 suggestions stay within hidden engineering limits.
+ let gn1=5.0+0.85*hours+0.45*siltFactor+0.55*wcFactor+0.55*Math.max(0,dosageFactor)+0.25*flowFactor;
+ let gn2=0.50+0.28*hours+0.20*siltFactor+0.20*wcFactor+0.20*Math.max(0,dosageFactor)+0.10*flowFactor;
+ gn1=roundHalf(clamp(gn1,3,CFG.suggestionLimit.GN1));
+ gn2=roundHalf(clamp(gn2,0.5,CFG.suggestionLimit.GN2));
+ base.GN1=gn1;base.GN2=gn2;
+
+ // Optional components are never auto-suggested.
+ if($('ligno').checked)base.Ligno=0.5;
+ if($('micro').checked)base.MicroAir=0.05;
+ if($('citric').checked)base.CitricAcid=0.5;
+ if($('sn').checked)base.SN=0.5;
+ if($('tea').checked)base.TEA=0.5;
+ if(specialFactor)base.VMA=0.2;
+ base.DF=0.02;
+
+ formulation={};Object.keys(base).forEach(c=>{if(base[c]>0)formulation[c]=roundRule(c,base[c]);});
+
+ // Keep automatic suggestions below 100%, leaving a water reserve.
+ let a=active();
+ if(a>99.0){
+   let f=99.0/a;
+   Object.keys(formulation).forEach(c=>formulation[c]=roundRule(c,formulation[c]*f));
+ }
+
+ /*
+   PHASE-STABILITY RULE:
+   Water balance must be at least 3.8 times GN1.
+   If GN1 is too high for the available water, reduce GN1 to the highest
+   0.5% step that satisfies the relationship. The removed GN1 is transferred
+   to EW30/EW36 so the retention contribution is compensated without changing
+   the total formulation percentage or reducing water balance.
+ */
+ let water=100-active();
+ let allowedGN1=Math.min(CFG.suggestionLimit.GN1,roundHalf(Math.max(0,water/3.8)));
+ let currentGN1=Number(formulation.GN1||0);
+ if(currentGN1>allowedGN1){
+   let reduction=currentGN1-allowedGN1;
+   formulation.GN1=roundHalf(allowedGN1);
+   let srShare=(type==='Flow'||val('unit')==='mm flow')?0.35:0.60;
+   let ssrShare=1-srShare;
+   formulation.EW30=roundHalf((formulation.EW30||0)+reduction*srShare);
+   formulation.EW36=roundHalf((formulation.EW36||0)+reduction*ssrShare);
+ }
+
+ // Final hidden automatic GN1/GN2 ceilings.
+ formulation.GN1=roundHalf(Math.min(CFG.suggestionLimit.GN1,formulation.GN1||0));
+ formulation.GN2=roundHalf(Math.min(CFG.suggestionLimit.GN2,formulation.GN2||0));
+
+ renderForm();
+ const finalWater=Math.max(0,100-active());
+ const gn1Final=Number(formulation.GN1||0);
+ const ratio=gn1Final>0?finalWater/gn1Final:Infinity;
+ $('balance').className='balance ok';
+ $('balance').innerHTML=`✓ Demand <b>${demand.toFixed(2)}</b> | ${demand<.28?'WR':demand<.50?'HR':demand<.78?'SR':'SSR'} dominant | Retention ${hours} h | Silt ${silt.toFixed(1)}% | W/C ${wc.toFixed(2)} | Dosage ${dose.toFixed(2)}% | Water/GN1 ${ratio===Infinity?'—':ratio.toFixed(2)+'×'}`;
+}
+
+function collect(){if(active()>100)return alert('Cannot save: formulation exceeds 100%.'),null;let id=editId||'TRIAL-'+Date.now();let r={};['initial','m30','h1','h2','h3','h4','h5'].forEach(k=>r[k]=val('r_'+k));let o={};['initial','m30','h1','h2','h3','h4','h5'].forEach(k=>o[k]=val('o_'+k));return{id,trialNumber:val('trialNo')||'TR-'+String(dataset.length+1).padStart(4,'0'),date:val('date'),inputs:{grade:num('grade'),pce:val('pce'),type:val('type'),target:num('target'),unit:val('unit'),retention:num('retention'),wc:num('wc'),cement:val('cement'),cementType:val('cementType'),silt:num('silt'),dosage:num('dosage'),client:val('client'),location:val('location'),testedBy:val('testedBy'),ligno:$('ligno').checked,micro:$('micro').checked,citric:$('citric').checked,sn:$('sn').checked,tea:$('tea').checked},formulation:{...formulation,water:+(100-active()).toFixed(5),solidTotal:+solidTotal().toFixed(5),activeTotal:+active().toFixed(5),total:100},sampleSize:num('sample'),sampleQuantities:Object.fromEntries([...Object.keys(formulation), 'Water'].map(c=>[c,+( (c==='Water'?100-active():formulation[c])*num('sample')/100).toFixed(5)])),results:r,observations:o,trialResults:{retentionAchieved:num('achieved'),rheology:val('rheology'),bleeding:val('bleeding'),segregation:val('segregation'),setting:val('setting'),status:val('status'),remarks:val('remarks')},updatedAt:new Date().toISOString()};}
+function saveTrial(){let t=collect();if(!t)return;let i=dataset.findIndex(x=>x.id===t.id);if(i>=0)dataset[i]=t;else dataset.unshift(t);localStorage.setItem('formulationTrialDataset',JSON.stringify(dataset));editId=null;renderDataset();alert('Trial dataset saved successfully.');}
+function renderDataset(){let q=val('search').toLowerCase(),b=$('datasetBody');b.innerHTML='';let arr=dataset.filter(t=>[t.trialNumber,t.inputs?.cement,t.inputs?.client,t.inputs?.grade].join(' ').toLowerCase().includes(q));if(!arr.length){b.innerHTML='<tr><td colspan="12" class="empty">No trials found.</td></tr>';return}arr.forEach(t=>{let s=t.trialResults?.status||'Draft',cl=s==='Validated'?'validated':s==='Rejected'?'rejected':s==='Trial Completed'?'completed':'draft';b.insertAdjacentHTML('beforeend',`<tr><td>${esc(t.trialNumber)}</td><td>${esc(t.date)}</td><td>M${t.inputs.grade}</td><td>${esc(t.inputs.cement)}</td><td>${t.inputs.wc}</td><td>${t.inputs.dosage}</td><td>${t.inputs.target}</td><td>${t.results?.h3??'—'}</td><td>${t.trialResults?.retentionAchieved||'—'}</td><td>${esc(t.trialResults?.rheology||'—')}</td><td><span class="badge ${cl}">${esc(s)}</span></td><td><button class="blue" style="padding:5px" onclick="edit('${t.id}')">Edit</button> <button class="red" style="padding:5px" onclick="del('${t.id}')">Delete</button></td></tr>`)});}
+function edit(id){let t=dataset.find(x=>x.id===id);if(!t)return;editId=id;let i=t.inputs||{};['trialNo','date','grade','pce','type','target','unit','retention','wc','cement','cementType','silt','dosage','client','location','testedBy'].forEach(k=>{let map={trialNo:'trialNumber',date:'date',grade:'grade',pce:'pce',type:'type',target:'target',unit:'unit',retention:'retention',wc:'wc',cement:'cement',cementType:'cementType',silt:'silt',dosage:'dosage',client:'client',location:'location',testedBy:'testedBy'};if(k==='trialNo')$(k).value=t.trialNumber;else if($(k))$(k).value=i[map[k]]??t[map[k]]??''});$('ligno').checked=!!i.ligno;$('micro').checked=!!i.micro;$('citric').checked=!!i.citric;$('sn').checked=!!i.sn;$('tea').checked=!!i.tea;formulation={...(t.formulation||{})};delete formulation.water;delete formulation.activeTotal;delete formulation.total;renderForm();let r=t.results||{},o=t.observations||{},tr=t.trialResults||{};['initial','m30','h1','h2','h3','h4','h5'].forEach(k=>{$('r_'+k).value=r[k]??'';$('o_'+k).value=o[k]??''});$('achieved').value=tr.retentionAchieved??'';$('rheology').value=tr.rheology||'';$('bleeding').value=tr.bleeding||'';$('segregation').value=tr.segregation||'';$('setting').value=tr.setting||'';$('status').value=tr.status||'Draft';$('remarks').value=tr.remarks||'';scrollTo({top:0,behavior:'smooth'});}
+function del(id){if(!confirm('Delete this trial?'))return;dataset=dataset.filter(x=>x.id!==id);localStorage.setItem('formulationTrialDataset',JSON.stringify(dataset));renderDataset();}
+function clearDataset(){if(!dataset.length)return alert('Dataset is empty.');if(prompt('Type DELETE to clear all saved trials.')==='DELETE'){dataset=[];localStorage.removeItem('formulationTrialDataset');renderDataset();}}
+function exportJSON(){if(!dataset.length)return alert('No dataset available.');download(JSON.stringify(dataset,null,2),'formulation-trial-dataset.json','application/json');}
+function exportCSV(){if(!dataset.length)return alert('No dataset available.');let h=['Trial','Date','Grade','Cement','Cement Type','W/C','Target','Retention Required','Dosage','Silt','EW31','EW29','EW30','EW36','GN1','GN2','Ligno','CitricAcid','SN','TEA','DF','MicroAir','VMA','Water','Initial','30min','1hr','2hr','3hr','4hr','5hr','Retention Achieved','Rheology','Bleeding','Segregation','Setting','Status','Remarks'];let rows=[h];dataset.forEach(t=>{let i=t.inputs||{},f=t.formulation||{},r=t.results||{},x=t.trialResults||{};rows.push([t.trialNumber,t.date,i.grade,i.cement,i.cementType,i.wc,i.target,i.retention,i.dosage,i.silt,f.EW31||0,f.EW29||0,f.EW30||0,f.EW36||0,f.GN1||0,f.GN2||0,f.Ligno||0,f.CitricAcid||0,f.SN||0,f.TEA||0,f.DF||0,f.MicroAir||0,f.VMA||0,f.water||0,r.initial??'',r.m30??'',r.h1??'',r.h2??'',r.h3??'',r.h4??'',r.h5??'',x.retentionAchieved??'',x.rheology||'',x.bleeding||'',x.segregation||'',x.setting||'',x.status||'',x.remarks||''])});download(rows.map(r=>r.map(csv).join(',')).join('\n'),'formulation-trial-dataset.csv','text/csv');}
+function csv(x){x=String(x??'');return /[",\n]/.test(x)?'"'+x.replace(/"/g,'""')+'"':x}function download(c,n,t){let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([c],{type:t}));a.download=n;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500)}function val(id){return $(id)?.value??''}function esc(x){return String(x??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}function escAttr(x){return String(x).replace(/\\/g,'\\\\').replace(/'/g,"\\'")}
+async function logout(){try{await fetch('/api/auth/logout',{method:'POST'})}catch(e){}location.href='/';}
+$('sample').addEventListener('input',calc);init();
+</script>
+</body></html>
