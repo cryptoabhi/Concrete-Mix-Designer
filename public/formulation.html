@@ -1,5 +1,5 @@
-
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
@@ -295,39 +295,40 @@ button{
 
 <header class="top">
 
-  <b>Concrete Technology Tools</b>
+<b>Concrete Technology Tools</b>
 
   <div class="actions">
 
-    <button class="light"
-      onclick="location.href='/select-tool.html'">
-      Dashboard
-    </button>
+```
+<button class="light"
+  onclick="location.href='/select-tool.html'">
+  Dashboard
+</button>
 
-    <button class="blue"
-      onclick="newTrial()">
-      + New Trial
-    </button>
+<button class="blue"
+  onclick="newTrial()">
+  + New Trial
+</button>
 
-    <button class="green"
-      onclick="saveTrial()">
-      Save Trial Dataset
-    </button>
+<button class="green"
+  onclick="saveTrial()">
+  Save Trial Dataset
+</button>
 
-    <button class="orange"
-      onclick="exportJSON()">
-      Export JSON
-    </button>
+<button class="orange"
+  onclick="exportJSON()">
+  Export JSON
+</button>
 
-    <button class="red"
-      onclick="logout()">
-      Logout
-    </button>
+<button class="red"
+  onclick="logout()">
+  Logout
+</button>
+```
 
   </div>
 
 </header>
-
 
 <main class="wrap">
 
@@ -346,9 +347,10 @@ button{
 
 </section>
 
-
 <!-- ========================================================= -->
+
 <!-- 1. TRIAL / REQUIREMENT -->
+
 <!-- ========================================================= -->
 
 <section class="card">
@@ -467,7 +469,6 @@ button{
 
 </div>
 
-
 <div class="checks">
 
 <label>
@@ -499,9 +500,10 @@ Add TEA Accelerator
 
 </section>
 
-
 <!-- ========================================================= -->
+
 <!-- 2. FORMULATION -->
+
 <!-- ========================================================= -->
 
 <section class="card">
@@ -515,15 +517,12 @@ this version uses a mathematical rule engine until ML is available.
 Retention time, W/C ratio, silt content and target dosage continuously
 change the WR / Hybrid / SR / SSR polymer balance and GN1 / GN2 retarder level.
 
-Polymer and retarder dosages are rounded to the nearest
-<b>0.5%</b>.
+Polymer and retarder dosages are rounded to the nearest <b>0.5%</b>.
 
-Citric acid, SN and TEA are
-<b>never auto-suggested</b>;
+Citric acid, SN and TEA are <b>never auto-suggested</b>;
 they are included only when you explicitly enable them.
 
 </div>
-
 
 <div class="tablewrap">
 
@@ -562,7 +561,6 @@ they are included only when you explicitly enable them.
 
 </tr>
 
-
 <tr class="total">
 
 <td colspan="2">Water Balance</td>
@@ -578,7 +576,6 @@ they are included only when you explicitly enable them.
 <td></td>
 
 </tr>
-
 
 <tr class="total">
 
@@ -602,11 +599,9 @@ they are included only when you explicitly enable them.
 
 </div>
 
-
 <div id="balance" class="balance bad">
 Generate a formulation.
 </div>
-
 
 <div class="btnrow">
 
@@ -628,7 +623,6 @@ Reset
 
 </div>
 
-
 <div class="sample">
 
 <div class="field">
@@ -641,10 +635,9 @@ type="number"
 value="300"
 min="1"
 step="0.1"
-oninput="calc()">
+oninput="calc">
 
 </div>
-
 
 <div class="metric">
 
@@ -654,7 +647,6 @@ oninput="calc()">
 
 </div>
 
-
 <div class="metric">
 
 <small>Total Solid %</small>
@@ -662,7 +654,6 @@ oninput="calc()">
 <b id="sampleSolids">—</b>
 
 </div>
-
 
 <div class="metric">
 
@@ -676,9 +667,10 @@ oninput="calc()">
 
 </section>
 
-
 <!-- ========================================================= -->
+
 <!-- 3. RAW MATERIAL QUANTITY -->
+
 <!-- ========================================================= -->
 
 <section class="card">
@@ -687,13 +679,11 @@ oninput="calc()">
 
 <div class="note">
 
-Enter any batch size such as
-<b>200 g, 300 g, 500 g, 1 kg</b>.
+Enter any batch size such as <b>200 g, 300 g, 500 g, 1 kg</b>.
 
 Quantities are calculated directly from the formulation percentage.
 
 </div>
-
 
 <div class="tablewrap">
 
@@ -731,9 +721,10 @@ Quantities are calculated directly from the formulation percentage.
 
 </section>
 
-
 <!-- ========================================================= -->
+
 <!-- 4. ACTUAL TRIAL RESULTS -->
+
 <!-- ========================================================= -->
 
 <section class="card">
@@ -746,7 +737,6 @@ Record actual laboratory/RMC observations.
 These become the future ML dataset.
 
 </div>
-
 
 <div class="tablewrap">
 
@@ -768,7 +758,6 @@ These become the future ML dataset.
 
 </div>
 
-
 <div class="grid" style="margin-top:15px">
 
 <div class="field">
@@ -778,7 +767,6 @@ These become the future ML dataset.
 <input id="achieved" type="number" step="0.5">
 
 </div>
-
 
 <div class="field">
 
@@ -798,7 +786,6 @@ These become the future ML dataset.
 
 </div>
 
-
 <div class="field">
 
 <label>Bleeding</label>
@@ -814,7 +801,6 @@ These become the future ML dataset.
 </select>
 
 </div>
-
 
 <div class="field">
 
@@ -832,7 +818,6 @@ These become the future ML dataset.
 
 </div>
 
-
 <div class="field">
 
 <label>Setting Observation</label>
@@ -847,7 +832,6 @@ These become the future ML dataset.
 </select>
 
 </div>
-
 
 <div class="field">
 
@@ -866,7 +850,6 @@ These become the future ML dataset.
 
 </div>
 
-
 <div class="field" style="margin-top:15px">
 
 <label>Remarks</label>
@@ -880,9 +863,10 @@ placeholder="Trial observations / modifications required / final conclusion">
 
 </section>
 
-
 <!-- ========================================================= -->
+
 <!-- 5. DATASET -->
+
 <!-- ========================================================= -->
 
 <section class="card">
@@ -897,7 +881,6 @@ are displayed here.
 
 </div>
 
-
 <div class="btnrow">
 
 <input
@@ -906,23 +889,19 @@ placeholder="Search trial / cement / client / grade"
 oninput="renderDataset()"
 style="max-width:300px;padding:9px;border:1px solid #d1d5db;border-radius:7px">
 
-
 <button class="green" onclick="exportJSON()">
 Export JSON
 </button>
 
-
 <button class="blue" onclick="exportCSV()">
 Export CSV
 </button>
-
 
 <button class="red" onclick="clearDataset()">
 Clear Dataset
 </button>
 
 </div>
-
 
 <div class="tablewrap" style="margin-top:12px">
 
@@ -966,7 +945,6 @@ Loading saved trials...
 </section>
 
 </main>
-
 
 <script>
 
@@ -1610,11 +1588,11 @@ function suggest(){
 
   let demand=
       0.34*retentionFactor
-    + 0.18*siltFactor
-    + 0.22*wcFactor
-    + 0.18*dosageFactor
-    + 0.10*flowFactor
-    + 0.08*specialFactor;
+    \+ 0.18*siltFactor
+    \+ 0.22*wcFactor
+    \+ 0.18*dosageFactor
+    \+ 0.10*flowFactor
+    \+ 0.08*specialFactor;
 
   demand=clamp(demand,0,1.80);
 
@@ -1627,11 +1605,11 @@ function suggest(){
 
   let polymerDemandFactor=
       1
-    + 0.20*retentionFactor
-    + 0.12*siltFactor
-    + 0.18*wcFactor
-    + 0.10*flowFactor
-    + 0.06*specialFactor;
+    \+ 0.20*retentionFactor
+    \+ 0.12*siltFactor
+    \+ 0.18*wcFactor
+    \+ 0.10*flowFactor
+    \+ 0.06*specialFactor;
 
   let polymerTotal=clamp(
     polymerBase*
@@ -1647,29 +1625,29 @@ function suggest(){
     - 0.27*retentionFactor
     - 0.16*flowFactor
     - 0.08*specialFactor
-    + 0.24*wcFactor
+    \+ 0.24*wcFactor
     - 0.04*siltFactor;
 
   let hr=
       0.24
     - 0.01*retentionFactor
-    + 0.02*flowFactor
-    + 0.01*siltFactor
+    \+ 0.02*flowFactor
+    \+ 0.01*siltFactor
     - 0.04*wcFactor;
 
   let sr=
       0.14
-    + 0.18*retentionFactor
-    + 0.10*flowFactor
-    + 0.05*specialFactor
-    + 0.02*siltFactor;
+    \+ 0.18*retentionFactor
+    \+ 0.10*flowFactor
+    \+ 0.05*specialFactor
+    \+ 0.02*siltFactor;
 
   let ssr=
       0.06
-    + 0.20*retentionFactor
-    + 0.18*flowFactor
-    + 0.07*specialFactor
-    + 0.02*siltFactor;
+    \+ 0.20*retentionFactor
+    \+ 0.18*flowFactor
+    \+ 0.07*specialFactor
+    \+ 0.02*siltFactor;
 
 
   wr=Math.max(0.02,wr);
@@ -1730,19 +1708,19 @@ function suggest(){
 
   let gn1=
       5.0
-    + 0.85*hours
-    + 0.45*siltFactor
-    + 0.55*wcFactor
-    + 0.55*Math.max(0,dosageFactor)
-    + 0.25*flowFactor;
+    \+ 0.85*hours
+    \+ 0.45*siltFactor
+    \+ 0.55*wcFactor
+    \+ 0.55*Math.max(0,dosageFactor)
+    \+ 0.25*flowFactor;
 
   let gn2=
       0.50
-    + 0.28*hours
-    + 0.20*siltFactor
-    + 0.20*wcFactor
-    + 0.20*Math.max(0,dosageFactor)
-    + 0.10*flowFactor;
+    \+ 0.28*hours
+    \+ 0.20*siltFactor
+    \+ 0.20*wcFactor
+    \+ 0.20*Math.max(0,dosageFactor)
+    \+ 0.10*flowFactor;
 
 
   gn1=roundHalf(
@@ -2131,7 +2109,7 @@ async function saveTrial(){
     if(editId){
 
       response=await fetch(
-        `/api/trials/${encodeURIComponent(editId)}`,
+        `/api/formulation-trials/${encodeURIComponent(editId)}`,
         {
           method:'PUT',
 
@@ -2149,7 +2127,7 @@ async function saveTrial(){
     }else{
 
       response=await fetch(
-        '/api/trials',
+        '/api/formulation-trials',
         {
           method:'POST',
 
@@ -2176,7 +2154,7 @@ async function saveTrial(){
       throw new Error(
         data.error ||
         data.message ||
-        'Unable to save trial.'
+        'Unable to save formulation trial.'
       );
 
     }
@@ -2185,8 +2163,6 @@ async function saveTrial(){
     editId=
       data.id ||
       data._id ||
-      data.trial?.id ||
-      data.trial?._id ||
       editId;
 
 
@@ -2205,7 +2181,7 @@ async function saveTrial(){
     console.error(err);
 
     alert(
-      'Error saving trial:\n'+
+      'Error saving formulation trial:\n'+
       err.message
     );
 
@@ -2215,7 +2191,7 @@ async function saveTrial(){
 
 
 /* ============================================================
-   LOAD DATASET FROM SERVER
+   LOAD FORMULATION DATASET FROM SERVER
 ============================================================ */
 
 async function loadDataset(){
@@ -2225,7 +2201,7 @@ async function loadDataset(){
   b.innerHTML=`
     <tr>
       <td colspan="12" class="loading">
-        Loading saved trials...
+        Loading saved formulation trials...
       </td>
     </tr>
   `;
@@ -2234,7 +2210,7 @@ async function loadDataset(){
   try{
 
     const response=
-      await fetch('/api/trials',{
+      await fetch('/api/formulation-trials',{
         credentials:'include'
       });
 
@@ -2248,40 +2224,29 @@ async function loadDataset(){
       throw new Error(
         data.error ||
         data.message ||
-        'Unable to load trials.'
+        'Unable to load formulation trials.'
       );
 
     }
 
 
-    let rows=[];
-
-
     if(Array.isArray(data)){
 
-      rows=data;
+      dataset=data;
 
     }else if(Array.isArray(data.trials)){
 
-      rows=data.trials;
+      dataset=data.trials;
 
     }else if(Array.isArray(data.data)){
 
-      rows=data.data;
+      dataset=data.data;
+
+    }else{
+
+      dataset=[];
 
     }
-
-
-    /*
-      Only show Formulation Suggester records.
-      This prevents Mix Design Calculator records
-      from appearing in this table.
-    */
-
-    dataset=rows.filter(
-      t=>
-        t.tool==='formulation-suggester'
-    );
 
 
     renderDataset();
@@ -2296,7 +2261,7 @@ async function loadDataset(){
     b.innerHTML=`
       <tr>
         <td colspan="12" class="empty">
-          Unable to load saved trials.
+          Unable to load saved formulation trials.
           <br>
           <small>${esc(err.message)}</small>
         </td>
@@ -2513,15 +2478,11 @@ async function edit(id){
   }
 
 
-  /*
-    Fallback: retrieve directly from server.
-  */
-
   try{
 
     const response=
       await fetch(
-        `/api/trials/${encodeURIComponent(id)}`,
+        `/api/formulation-trials/${encodeURIComponent(id)}`,
         {
           credentials:'include'
         }
@@ -2536,7 +2497,7 @@ async function edit(id){
 
       throw new Error(
         data.error ||
-        'Unable to load trial.'
+        'Unable to load formulation trial.'
       );
 
     }
@@ -2552,7 +2513,7 @@ async function edit(id){
     console.error(err);
 
     alert(
-      'Unable to open trial:\n'+
+      'Unable to open formulation trial:\n'+
       err.message
     );
 
@@ -2628,11 +2589,6 @@ function loadTrialIntoForm(t){
     !!i.tea;
 
 
-  /*
-    Restore formulation.
-    Remove calculated fields from formulation.
-  */
-
   formulation={
     ...(t.formulation||{})
   };
@@ -2646,10 +2602,6 @@ function loadTrialIntoForm(t){
 
   renderForm();
 
-
-  /*
-    Restore actual trial results.
-  */
 
   const r=t.results||{};
 
@@ -2720,10 +2672,6 @@ function newTrial(){
   editId=null;
 
 
-  /*
-    Reset requirement fields.
-  */
-
   $('trialNo').value='';
 
   $('date').value=
@@ -2769,16 +2717,8 @@ function newTrial(){
   $('tea').checked=false;
 
 
-  /*
-    Reset formulation.
-  */
-
   resetFormula();
 
-
-  /*
-    Reset trial results.
-  */
 
   [
     'initial',
@@ -2836,7 +2776,7 @@ async function del(id){
 
 
   if(!confirm(
-    'Delete this saved trial?'
+    'Delete this saved formulation trial?'
   )){
 
     return;
@@ -2848,7 +2788,7 @@ async function del(id){
 
     const response=
       await fetch(
-        `/api/trials/${encodeURIComponent(id)}`,
+        `/api/formulation-trials/${encodeURIComponent(id)}`,
         {
           method:'DELETE',
           credentials:'include'
@@ -2866,7 +2806,7 @@ async function del(id){
       throw new Error(
         data.error ||
         data.message ||
-        'Unable to delete trial.'
+        'Unable to delete formulation trial.'
       );
 
     }
@@ -2889,7 +2829,7 @@ async function del(id){
     console.error(err);
 
     alert(
-      'Error deleting trial:\n'+
+      'Error deleting formulation trial:\n'+
       err.message
     );
 
@@ -2924,47 +2864,30 @@ async function clearDataset(){
   }
 
 
-  /*
-    Delete each formulation record individually.
-
-    This is intentionally done through the existing
-    authenticated DELETE endpoint rather than using a
-    client-side localStorage clear.
-  */
-
   try{
 
-    const ids=
-      dataset
-        .map(getRecordId)
-        .filter(Boolean);
+    const response=
+      await fetch(
+        '/api/formulation-trials',
+        {
+          method:'DELETE',
+          credentials:'include'
+        }
+      );
 
 
-    for(const id of ids){
-
-      const response=
-        await fetch(
-          `/api/trials/${encodeURIComponent(id)}`,
-          {
-            method:'DELETE',
-            credentials:'include'
-          }
-        );
+    const data=
+      await response.json()
+        .catch(()=>({}));
 
 
-      if(!response.ok){
+    if(!response.ok){
 
-        const data=
-          await response.json()
-            .catch(()=>({}));
-
-        throw new Error(
-          data.error ||
-          data.message ||
-          `Unable to delete trial ${id}`
-        );
-
-      }
+      throw new Error(
+        data.error ||
+        data.message ||
+        'Unable to clear formulation dataset.'
+      );
 
     }
 
@@ -2977,7 +2900,12 @@ async function clearDataset(){
 
 
     alert(
-      'Your formulation dataset has been cleared.'
+      `Your formulation dataset has been cleared.`+
+      (
+        Number.isFinite(data.deletedCount)
+          ? ` ${data.deletedCount} trial(s) deleted.`
+          : ''
+      )
     );
 
 
@@ -2985,16 +2913,11 @@ async function clearDataset(){
 
     console.error(err);
 
-    /*
-      Reload from server so the UI reflects
-      the actual database state.
-    */
-
     await loadDataset();
 
 
     alert(
-      'Some trials could not be deleted:\n'+
+      'Error clearing formulation dataset:\n'+
       err.message
     );
 
@@ -3327,4 +3250,3 @@ init();
 
 </body>
 </html>
-
