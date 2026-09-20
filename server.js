@@ -35,6 +35,7 @@ const ADMIN_EMAIL = 'kordeabhishek383@gmail.com';
 let db;
 let usersCol;
 let trialsCol;
+let formulationTrialsCol;
 
 // ---------------------------------------------------------------------------
 // Password Hashing
@@ -950,6 +951,181 @@ const server = http.createServer(async (req, res) => {
 
             return;
         }
+        // ===================================================================
+// FORMULATION TRIALS: AUTHENTICATION REQUIRED
+// ===================================================================
+
+if (pathname.startsWith('/api/formulation-trials')) {
+    const user = await getCurrentUser(req);
+
+    if (!user) {
+        unauthorized(res, 'Not logged in');
+        return;
+    }
+
+    // ---------------------------------------------------------------
+    // GET ALL FORMULATION TRIALS FOR CURRENT USER
+    // ---------------------------------------------------------------
+
+    if (
+        req.method === 'GET' &&
+        pathname === '/api/formulation-trials'
+    ) {
+        const trials = await formulationTrialsCol
+            .find({ userId: user.id })
+            .sort({ updatedAt: -1 })
+            .toArray();
+
+        sendJSON(res, 200, trials);
+        return;
+    }
+
+    // ---------------------------------------------------------------
+    // CREATE FORMULATION TRIAL
+    // ---------------------------------------------------------------
+
+    if (
+        req.method === 'POST' &&
+        pathname === '/api/formulation-trials'
+    ) {
+        const body = await parseBody(req);
+
+        const now = new Date().toISOString();
+
+        const trial = {
+            id: crypto.randomUUID(),
+            userId: user.id,
+            ...body,
+            createdAt: now,
+            updatedAt: now
+        };
+
+        // Never allow the browser to control ownership
+        trial.userId = user.id;
+        trial.id = trial.id;
+
+        await formulationTrialsCol.insertOne(trial);
+
+        sendJSON(res, 201, trial);
+        return;
+    }
+
+    // ---------------------------------------------------------------
+// DELETE ALL FORMULATION TRIALS FOR CURRENT USER
+// ---------------------------------------------------------------
+
+if (
+    req.method === 'DELETE' &&
+    pathname === '/api/formulation-trials'
+) {
+    const result = await formulationTrialsCol.deleteMany({
+        userId: user.id
+    });
+
+    sendJSON(res, 200, {
+        success: true,
+        deletedCount: result.deletedCount
+    });
+
+    return;
+}
+
+
+    // ---------------------------------------------------------------
+    // GET / UPDATE / DELETE SINGLE FORMULATION TRIAL
+    // ---------------------------------------------------------------
+
+    const match = pathname.match(
+        /^\/api\/formulation-trials\/([^/]+)$/
+    );
+
+    if (match) {
+        const trialId = match[1];
+
+        const trial = await formulationTrialsCol.findOne({
+            id: trialId,
+            userId: user.id
+        });
+
+        if (!trial) {
+            sendJSON(res, 404, {
+                error: 'Formulation trial not found'
+            });
+            return;
+        }
+
+        // -----------------------------------------------------------
+        // GET SINGLE TRIAL
+        // -----------------------------------------------------------
+
+        if (req.method === 'GET') {
+            sendJSON(res, 200, trial);
+            return;
+        }
+
+        // -----------------------------------------------------------
+        // UPDATE TRIAL
+        // -----------------------------------------------------------
+
+        if (req.method === 'PUT') {
+            const body = await parseBody(req);
+
+            const updatedAt = new Date().toISOString();
+
+            const updateData = {
+                ...body,
+                updatedAt
+            };
+
+            // Never allow ownership or identity changes
+            delete updateData.id;
+            delete updateData.userId;
+            delete updateData.createdAt;
+
+            await formulationTrialsCol.updateOne(
+                {
+                    id: trialId,
+                    userId: user.id
+                },
+                {
+                    $set: updateData
+                }
+            );
+
+            const updatedTrial =
+                await formulationTrialsCol.findOne({
+                    id: trialId,
+                    userId: user.id
+                });
+
+            sendJSON(res, 200, updatedTrial);
+            return;
+        }
+
+        // -----------------------------------------------------------
+        // DELETE TRIAL
+        // -----------------------------------------------------------
+
+        if (req.method === 'DELETE') {
+            await formulationTrialsCol.deleteOne({
+                id: trialId,
+                userId: user.id
+            });
+
+            sendJSON(res, 200, {
+                success: true
+            });
+
+            return;
+        }
+    }
+
+    sendJSON(res, 404, {
+        error: 'Formulation trial endpoint not found'
+    });
+
+    return;
+}
 
         // ===================================================================
         // STATIC FILES
@@ -1024,7 +1200,7 @@ async function start() {
 
         usersCol = db.collection('users');
         trialsCol = db.collection('trials');
-
+        formulationTrialsCol = db.collection('formulationTrials');
         // Unique email index
         await usersCol.createIndex(
             { email: 1 },
@@ -1035,6 +1211,12 @@ async function start() {
         await trialsCol.createIndex({
             userId: 1,
             updatedAt: -1
+        });
+
+        // Formulation trial indexes
+        await formulationTrialsCol.createIndex({
+        userId: 1,
+        updatedAt: -1
         });
 
         server.listen(PORT, () => {
