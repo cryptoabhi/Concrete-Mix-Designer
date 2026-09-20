@@ -1588,11 +1588,11 @@ function suggest(){
 
   let demand=
       0.34*retentionFactor
-    \+ 0.18*siltFactor
-    \+ 0.22*wcFactor
-    \+ 0.18*dosageFactor
-    \+ 0.10*flowFactor
-    \+ 0.08*specialFactor;
+    + 0.18*siltFactor
+    + 0.22*wcFactor
+    + 0.18*dosageFactor
+    + 0.10*flowFactor
+    + 0.08*specialFactor;
 
   demand=clamp(demand,0,1.80);
 
@@ -1605,11 +1605,11 @@ function suggest(){
 
   let polymerDemandFactor=
       1
-    \+ 0.20*retentionFactor
-    \+ 0.12*siltFactor
-    \+ 0.18*wcFactor
-    \+ 0.10*flowFactor
-    \+ 0.06*specialFactor;
+    + 0.20*retentionFactor
+    + 0.12*siltFactor
+    + 0.18*wcFactor
+    + 0.10*flowFactor
+    + 0.06*specialFactor;
 
   let polymerTotal=clamp(
     polymerBase*
@@ -1625,29 +1625,29 @@ function suggest(){
     - 0.27*retentionFactor
     - 0.16*flowFactor
     - 0.08*specialFactor
-    \+ 0.24*wcFactor
+    + 0.24*wcFactor
     - 0.04*siltFactor;
 
   let hr=
       0.24
     - 0.01*retentionFactor
-    \+ 0.02*flowFactor
-    \+ 0.01*siltFactor
+    + 0.02*flowFactor
+    + 0.01*siltFactor
     - 0.04*wcFactor;
 
   let sr=
       0.14
-    \+ 0.18*retentionFactor
-    \+ 0.10*flowFactor
-    \+ 0.05*specialFactor
-    \+ 0.02*siltFactor;
+    + 0.18*retentionFactor
+    + 0.10*flowFactor
+    + 0.05*specialFactor
+    + 0.02*siltFactor;
 
   let ssr=
       0.06
-    \+ 0.20*retentionFactor
-    \+ 0.18*flowFactor
-    \+ 0.07*specialFactor
-    \+ 0.02*siltFactor;
+    + 0.20*retentionFactor
+    + 0.18*flowFactor
+    + 0.07*specialFactor
+    + 0.02*siltFactor;
 
 
   wr=Math.max(0.02,wr);
@@ -1708,19 +1708,19 @@ function suggest(){
 
   let gn1=
       5.0
-    \+ 0.85*hours
-    \+ 0.45*siltFactor
-    \+ 0.55*wcFactor
-    \+ 0.55*Math.max(0,dosageFactor)
-    \+ 0.25*flowFactor;
+    + 0.85*hours
+    + 0.45*siltFactor
+    + 0.55*wcFactor
+    + 0.55*Math.max(0,dosageFactor)
+    + 0.25*flowFactor;
 
   let gn2=
       0.50
-    \+ 0.28*hours
-    \+ 0.20*siltFactor
-    \+ 0.20*wcFactor
-    \+ 0.20*Math.max(0,dosageFactor)
-    \+ 0.10*flowFactor;
+    + 0.28*hours
+    + 0.20*siltFactor
+    + 0.20*wcFactor
+    + 0.20*Math.max(0,dosageFactor)
+    + 0.10*flowFactor;
 
 
   gn1=roundHalf(
