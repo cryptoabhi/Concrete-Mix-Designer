@@ -1133,9 +1133,9 @@ if (
 
         if (req.method === 'GET') {
             // Home page
-            if (pathname === '/') {
-                redirect(res, '/login.html');
-                return;
+        if (pathname === '/') {
+        serveStatic(req, res, '/index.html');
+        return;
             }
 
             // Protect Formulation Suggester
