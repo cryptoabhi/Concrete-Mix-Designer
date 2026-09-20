@@ -35,7 +35,7 @@
 </main>
 <script>
 const CFG={
- referenceDosage:0.80,
+ referenceDosage:1,
  suggestionLimit:{EW31:30,EW29:30,EW30:30,EW36:30,GN1:10,GN2:2.5,Ligno:3,CitricAcid:3,SN:2,TEA:2,DF:1,MicroAir:1,VMA:1},
  role:{EW31:'Water Reducer (WR)',EW29:'Hybrid PCE (HR)',EW30:'Slump Retainer (SR)',EW36:'Super Slump Retainer (SSR)',GN1:'Gluconate Retarder',GN2:'Sugar Retarder',Ligno:'Lignosulphonate',CitricAcid:'Citric Acid Retarder',SN:'Sodium Nitrate Accelerator',TEA:'TEA Accelerator',DF:'Defoamer',MicroAir:'Micro Air',VMA:'Viscosity Modifier'},
  solid:{EW31:.50,EW29:.50,EW30:.50,EW36:.50,GN1:1,GN2:1,Ligno:1,CitricAcid:1,SN:1,TEA:1,DF:1,MicroAir:1,VMA:1}
@@ -104,8 +104,8 @@ function suggest(){
  if($('citric').checked)base.CitricAcid=0.5;
  if($('sn').checked)base.SN=0.5;
  if($('tea').checked)base.TEA=0.5;
- if(specialFactor)base.VMA=0.2;
- base.DF=0.02;
+ if(specialFactor)base.VMA=0.1;
+ base.DF=0.03;
 
  formulation={};Object.keys(base).forEach(c=>{if(base[c]>0)formulation[c]=roundRule(c,base[c]);});
 
