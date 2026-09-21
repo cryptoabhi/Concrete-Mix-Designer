@@ -8,4 +8,10 @@
         <priority>1.0</priority>
     </url>
 
+    <url>
+        <loc>https://concrete-mix-designer.onrender.com/is-10262-concrete-mix-design.html</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
 </urlset>
