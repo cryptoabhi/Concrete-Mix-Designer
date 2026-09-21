@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>IS 10262 Concrete Mix Design | Concrete Mix Design Tool</title>
+
+    <meta name="description"
+        content="Learn about IS 10262 concrete mix design, mix proportioning, water-cement ratio, aggregate selection, admixture dosage and trial mixes. Use Concrete Technology Tools for practical mix design workflows.">
+
+    <meta name="keywords"
+        content="IS 10262 concrete mix design, IS 10262 mix design, concrete mix design, concrete mix design calculator, concrete mix design tool, concrete mix proportioning, concrete mix design procedure, RMC mix design">
+
+    <meta name="author" content="Abhishek Korde">
+
+    <meta name="robots" content="index, follow">
+
+    <link rel="canonical"
+        href="https://concrete-mix-designer.onrender.com/is-10262-concrete-mix-design.html">
+
+    <!-- Open Graph -->
+
+    <meta property="og:type" content="article">
+
+    <meta property="og:title"
+        content="IS 10262 Concrete Mix Design | Concrete Mix Design Tool">
+
+    <meta property="og:description"
+        content="A practical overview of IS 10262 concrete mix design, mix proportioning, materials, water-cement ratio and trial mixes.">
+
+    <meta property="og:url"
+        content="https://concrete-mix-designer.onrender.com/is-10262-concrete-mix-design.html">
+
+    <meta property="og:site_name"
+        content="Concrete Technology Tools">
+
+    <meta name="theme-color" content="#0f4c81">
+
+    <link rel="icon" type="image/png" href="/logo.png">
+
+    <!-- Structured Data -->
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": "IS 10262 Concrete Mix Design",
+        "description": "Practical overview of IS 10262 concrete mix design and concrete mix proportioning.",
+        "url": "https://concrete-mix-designer.onrender.com/is-10262-concrete-mix-design.html",
+        "author": {
+            "@type": "Person",
+            "name": "Abhishek Korde"
+        },
+        "publisher": {
+            "@type": "Organization",
+            "name": "Concrete Technology Tools"
+        }
+    }
+    </script>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            color: #17202a;
+            background: #f5f7fa;
+            line-height: 1.7;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        /* NAVBAR */
+
+        .navbar {
+            width: 100%;
+            background: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1100px;
+            margin: auto;
+            padding: 14px 22px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            color: #0f4c81;
+
+            font-size: 19px;
+            font-weight: 700;
+        }
+
+        .brand img {
+            width: 38px;
+            height: 38px;
+            object-fit: contain;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 22px;
+        }
+
+        .nav-links a {
+            color: #374151;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .nav-links a:hover {
+            color: #0f4c81;
+        }
+
+        .login-btn {
+            background: #0f4c81;
+            color: #ffffff !important;
+            padding: 9px 18px;
+            border-radius: 7px;
+        }
+
+        /* HERO */
+
+        .hero {
+            background:
+                linear-gradient(
+                    135deg,
+                    #eef5fb 0%,
+                    #ffffff 55%,
+                    #edf4f9 100%
+                );
+
+            padding: 75px 20px 65px;
+        }
+
+        .hero-container {
+            max-width: 900px;
+            margin: auto;
+            text-align: center;
+        }
+
+        .hero-badge {
+            display: inline-block;
+
+            background: #e1edf7;
+            color: #0f4c81;
+
+            font-size: 13px;
+            font-weight: 700;
+
+            padding: 7px 14px;
+
+            border-radius: 20px;
+
+            margin-bottom: 20px;
+        }
+
+        .hero h1 {
+            font-size: clamp(32px, 5vw, 52px);
+            line-height: 1.15;
+
+            color: #12263a;
+
+            margin-bottom: 20px;
+        }
+
+        .hero h1 span {
+            color: #0f4c81;
+        }
+
+        .hero p {
+            max-width: 760px;
+
+            margin: auto;
+
+            font-size: 18px;
+
+            color: #536273;
+        }
+
+        .hero-buttons {
+            margin-top: 30px;
+
+            display: flex;
+            justify-content: center;
+
+            gap: 14px;
+
+            flex-wrap: wrap;
+        }
+
+        .primary-btn,
+        .secondary-btn {
+            display: inline-block;
+
+            padding: 13px 24px;
+
+            border-radius: 8px;
+
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .primary-btn {
+            background: #0f4c81;
+            color: #ffffff;
+        }
+
+        .primary-btn:hover {
+            background: #0b3a63;
+        }
+
+        .secondary-btn {
+            background: #ffffff;
+
+            color: #0f4c81;
+
+            border: 1px solid #cbd5df;
+        }
+
+        /* CONTENT */
+
+        .section {
+            padding: 65px 20px;
+        }
+
+        .section-container {
+            max-width: 900px;
+            margin: auto;
+        }
+
+        .content-card {
+            background: #ffffff;
+
+            border: 1px solid #e3e8ee;
+
+            border-radius: 12px;
+
+            padding: 35px;
+
+            box-shadow: 0 4px 16px rgba(15, 76, 129, 0.04);
+        }
+
+        .content-card h2 {
+            color: #17324d;
+
+            font-size: 28px;
+
+            margin-bottom: 15px;
+
+            line-height: 1.3;
+        }
+
+        .content-card h3 {
+            color: #17324d;
+
+            font-size: 21px;
+
+            margin-top: 32px;
+
+            margin-bottom: 10px;
+        }
+
+        .content-card p {
+            color: #596575;
+
+            font-size: 16px;
+
+            margin-bottom: 15px;
+        }
+
+        .content-card ul {
+            margin: 10px 0 18px 22px;
+
+            color: #596575;
+        }
+
+        .content-card li {
+            margin-bottom: 7px;
+        }
+
+        /* STEPS */
+
+        .steps {
+            display: grid;
+
+            grid-template-columns: repeat(2, 1fr);
+
+            gap: 18px;
+
+            margin-top: 25px;
+        }
+
+        .step {
+            background: #f8fafc;
+
+            border: 1px solid #e3e8ee;
+
+            border-radius: 10px;
+
+            padding: 22px;
+        }
+
+        .step-number {
+            display: inline-flex;
+
+            width: 34px;
+            height: 34px;
+
+            align-items: center;
+            justify-content: center;
+
+            background: #eaf2f8;
+
+            color: #0f4c81;
+
+            border-radius: 50%;
+
+            font-weight: 700;
+
+            margin-bottom: 10px;
+        }
+
+        .step h3 {
+            margin: 0 0 7px;
+
+            font-size: 18px;
+        }
+
+        .step p {
+            font-size: 14px;
+
+            margin: 0;
+        }
+
+        /* NOTE */
+
+        .note {
+            margin-top: 25px;
+
+            padding: 18px 20px;
+
+            background: #eef5fb;
+
+            border-left: 4px solid #0f4c81;
+
+            border-radius: 6px;
+
+            color: #405466;
+
+            font-size: 14px;
+        }
+
+        /* CTA */
+
+        .cta {
+            padding: 65px 20px;
+
+            background: #0f4c81;
+
+            color: #ffffff;
+
+            text-align: center;
+        }
+
+        .cta h2 {
+            font-size: 30px;
+
+            margin-bottom: 12px;
+        }
+
+        .cta p {
+            max-width: 680px;
+
+            margin: auto;
+
+            color: #dceaf5;
+        }
+
+        .cta .primary-btn {
+            margin-top: 24px;
+
+            background: #ffffff;
+
+            color: #0f4c81;
+        }
+
+        /* FOOTER */
+
+        footer {
+            background: #111827;
+
+            color: #9ca3af;
+
+            padding: 30px 20px;
+
+            text-align: center;
+
+            font-size: 13px;
+        }
+
+        footer strong {
+            color: #ffffff;
+        }
+
+        /* MOBILE */
+
+        @media (max-width: 700px) {
+
+            .nav-container {
+                padding: 12px 16px;
+            }
+
+            .nav-links a:not(.login-btn) {
+                display: none;
+            }
+
+            .hero {
+                padding: 60px 18px 55px;
+            }
+
+            .hero p {
+                font-size: 16px;
+            }
+
+            .section {
+                padding: 50px 18px;
+            }
+
+            .content-card {
+                padding: 24px;
+            }
+
+            .content-card h2 {
+                font-size: 25px;
+            }
+
+            .steps {
+                grid-template-columns: 1fr;
+            }
+
+            .cta h2 {
+                font-size: 26px;
+            }
+
+        }
+
+        @media (max-width: 450px) {
+
+            .brand {
+                font-size: 16px;
+            }
+
+            .brand img {
+                width: 32px;
+                height: 32px;
+            }
+
+            .login-btn {
+                padding: 8px 13px;
+                font-size: 13px !important;
+            }
+
+            .hero h1 {
+                font-size: 33px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<!-- NAVIGATION -->
+
+<header class="navbar">
+
+    <div class="nav-container">
+
+        <a href="/" class="brand">
+
+            <img
+                src="/logo.png"
+                alt="Concrete Technology Tools logo">
+
+            <span>Concrete Technology Tools</span>
+
+        </a>
+
+
+        <nav class="nav-links">
+
+            <a href="/">
+                Home
+            </a>
+
+            <a href="/#tools">
+                Tools
+            </a>
+
+            <a href="/#about">
+                About
+            </a>
+
+            <a href="/login.html" class="login-btn">
+                Login
+            </a>
+
+        </nav>
+
+    </div>
+
+</header>
+
+
+<!-- HERO -->
+
+<main>
+
+<section class="hero">
+
+    <div class="hero-container">
+
+        <div class="hero-badge">
+            CONCRETE MIX DESIGN
+        </div>
+
+        <h1>
+            IS 10262
+            <span>Concrete Mix Design</span>
+        </h1>
+
+        <p>
+            A practical overview of concrete mix proportioning,
+            material selection, water-cement ratio, aggregate
+            proportions, admixture dosage and trial mix evaluation.
+        </p>
+
+        <div class="hero-buttons">
+
+            <a
+                href="/login.html"
+                class="primary-btn">
+                Use Concrete Mix Designer
+            </a>
+
+            <a
+                href="/"
+                class="secondary-btn">
+                Back to Tools
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- MAIN ARTICLE -->
+
+<section class="section">
+
+    <div class="section-container">
+
+        <article class="content-card">
+
+            <h2>
+                What is IS 10262 Concrete Mix Design?
+            </h2>
+
+            <p>
+                Concrete mix design is the process of selecting and
+                proportioning the ingredients of concrete to achieve
+                the required strength, workability, durability and
+                other performance requirements.
+            </p>
+
+            <p>
+                In India, IS 10262 provides guidelines for concrete
+                mix proportioning. A practical mix-design process
+                generally combines standardised calculations with
+                information about the actual cement, aggregates,
+                water, chemical admixtures and other materials being
+                used.
+            </p>
+
+            <p>
+                The calculated mix is normally evaluated through
+                laboratory trials and adjusted when required to
+                achieve the desired fresh and hardened concrete
+                properties.
+            </p>
+
+
+            <h3>
+                Main Parameters Used in Concrete Mix Design
+            </h3>
+
+            <p>
+                A concrete mix design generally considers several
+                important parameters, including:
+            </p>
+
+            <ul>
+
+                <li>
+                    Characteristic compressive strength and target mean
+                    strength
+                </li>
+
+                <li>
+                    Water-cement or water-cementitious material ratio
+                </li>
+
+                <li>
+                    Required workability
+                </li>
+
+                <li>
+                    Cement and supplementary cementitious materials
+                </li>
+
+                <li>
+                    Fine aggregate and coarse aggregate
+                </li>
+
+                <li>
+                    Aggregate size and grading
+                </li>
+
+                <li>
+                    Chemical admixture dosage
+                </li>
+
+                <li>
+                    Exposure and durability requirements
+                </li>
+
+                <li>
+                    Material-specific corrections and trial observations
+                </li>
+
+            </ul>
+
+
+            <h3>
+                Typical Concrete Mix Design Workflow
+            </h3>
+
+            <p>
+                A practical concrete mix design workflow can be
+                organised into several stages.
+            </p>
+
+
+            <div class="steps">
+
+
+                <div class="step">
+
+                    <div class="step-number">
+                        1
+                    </div>
+
+                    <h3>
+                        Define Requirements
+                    </h3>
+
+                    <p>
+                        Establish the concrete grade, required
+                        workability, exposure conditions and other
+                        project requirements.
+                    </p>
+
+                </div>
+
+
+                <div class="step">
+
+                    <div class="step-number">
+                        2
+                    </div>
+
+                    <h3>
+                        Select Materials
+                    </h3>
+
+                    <p>
+                        Determine the cementitious materials,
+                        aggregates, water and chemical admixtures
+                        available for the mix.
+                    </p>
+
+                </div>
+
+
+                <div class="step">
+
+                    <div class="step-number">
+                        3
+                    </div>
+
+                    <h3>
+                        Determine Water-Cement Ratio
+                    </h3>
+
+                    <p>
+                        Select an appropriate water-cementitious
+                        ratio considering strength and durability
+                        requirements.
+                    </p>
+
+                </div>
+
+
+                <div class="step">
+
+                    <div class="step-number">
+                        4
+                    </div>
+
+                    <h3>
+                        Estimate Water and Cementitious Content
+                    </h3>
+
+                    <p>
+                        Determine the required water and cementitious
+                        material quantities based on the design
+                        requirements.
+                    </p>
+
+                </div>
+
+
+                <div class="step">
+
+                    <div class="step-number">
+                        5
+                    </div>
+
+                    <h3>
+                        Proportion Aggregates
+                    </h3>
+
+                    <p>
+                        Determine suitable fine and coarse aggregate
+                        proportions considering aggregate properties
+                        and grading.
+                    </p>
+
+                </div>
+
+
+                <div class="step">
+
+                    <div class="step-number">
+                        6
+                    </div>
+
+                    <h3>
+                        Consider Admixture Dosage
+                    </h3>
+
+                    <p>
+                        Select an appropriate chemical admixture
+                        dosage based on the required workability
+                        and actual material performance.
+                    </p>
+
+                </div>
+
+
+                <div class="step">
+
+                    <div class="step-number">
+                        7
+                    </div>
+
+                    <h3>
+                        Prepare Trial Mix
+                    </h3>
+
+                    <p>
+                        Produce a laboratory trial and evaluate
+                        fresh concrete properties such as
+                        workability and consistency.
+                    </p>
+
+                </div>
+
+
+                <div class="step">
+
+                    <div class="step-number">
+                        8
+                    </div>
+
+                    <h3>
+                        Evaluate and Adjust
+                    </h3>
+
+                    <p>
+                        Compare the trial results with the required
+                        performance and make appropriate adjustments
+                        before finalising the mix.
+                    </p>
+
+                </div>
+
+
+            </div>
+
+
+            <h3>
+                Importance of Trial Mixes
+            </h3>
+
+            <p>
+                Calculations provide the starting point for a concrete
+                mix design, but actual material behaviour can differ
+                because cement, aggregates, admixtures and other
+                materials vary from source to source.
+            </p>
+
+            <p>
+                Trial mixes therefore provide an important opportunity
+                to verify workability, consistency and other fresh
+                concrete characteristics before a mix is used in
+                production.
+            </p>
+
+
+            <h3>
+                Role of Chemical Admixtures
+            </h3>
+
+            <p>
+                Chemical admixtures can be used to modify fresh
+                concrete properties and help achieve the required
+                workability at a practical water content.
+            </p>
+
+            <p>
+                For RMC and high-workability concrete, admixture
+                performance can also involve workability retention
+                during transportation and placing. Actual dosage and
+                formulation should therefore be evaluated through
+                material-specific trials.
+            </p>
+
+
+            <h3>
+                Concrete Mix Design for RMC Applications
+            </h3>
+
+            <p>
+                RMC production can involve significant variation in
+                materials, transportation time, weather conditions
+                and required workability. A practical mix design
+                therefore needs to be supported by trial observations
+                and appropriate production controls.
+            </p>
+
+
+            <div class="note">
+
+                <strong>Important:</strong>
+                Mix design calculations should be checked against the
+                applicable project specifications, current standards,
+                material test results and actual trial performance.
+                This page is an educational overview and is not a
+                substitute for engineering review or project-specific
+                mix approval.
+
+            </div>
+
+
+        </article>
+
+    </div>
+
+</section>
+
+
+<!-- CTA -->
+
+<section class="cta">
+
+    <h2>
+        Try the Concrete Mix Designer
+    </h2>
+
+    <p>
+        Use Concrete Technology Tools to organise your concrete
+        mix-design workflow and manage practical trial information.
+    </p>
+
+    <a
+        href="/login.html"
+        class="primary-btn">
+        Open Concrete Technology Tools
+    </a>
+
+</section>
+
+</main>
+
+
+<!-- FOOTER -->
+
+<footer>
+
+    <p>
+        <strong>
+            Concrete Technology Tools
+        </strong>
+    </p>
+
+    <p>
+        Developed by Abhishek Korde
+    </p>
+
+    <p>
+        © <span id="year"></span>
+        Concrete Technology Tools. All rights reserved.
+    </p>
+
+</footer>
+
+
+<script>
+
+    document.getElementById("year").textContent =
+        new Date().getFullYear();
+
+</script>
+
+
+</body>
+
+</html>
