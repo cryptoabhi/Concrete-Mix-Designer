@@ -1,447 +1,495 @@
 <!DOCTYPE html>
-
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Concrete Technology Tools | Mix Design & Admixture Formulation</title>
+    <title>Concrete Mix Design & Admixture Formulation Tools | Concrete Technology Tools</title>
 
-<meta name="description"
-      content="Concrete Technology Tools for concrete mix design, admixture formulation, workability and retention analysis. Practical tools for concrete technologists, RMC professionals and civil engineers.">
+    <meta name="description"
+        content="Concrete Technology Tools provides practical tools for concrete mix design, IS 10262 calculations, admixture formulation, workability and retention analysis for civil engineers, RMC professionals and concrete technologists.">
 
-<meta name="keywords"
-      content="concrete technology tools, concrete mix design, IS 10262 mix design, concrete mix designer, admixture formulation, concrete admixture, RMC, concrete technology, workability retention, PCE admixture">
+    <meta name="keywords"
+        content="concrete mix design calculator, concrete mix design tool, IS 10262 concrete mix design, concrete technology tools, admixture formulation, concrete admixture formulation, PCE admixture, RMC concrete mix design, concrete workability, concrete retention">
 
-<meta name="author" content="Abhishek Korde">
+    <meta name="author" content="Abhishek Korde">
 
-<meta name="robots" content="index, follow">
+    <meta name="robots" content="index, follow">
 
-<link rel="canonical"
-      href="https://concrete-mix-designer.onrender.com/">
+    <link rel="canonical"
+        href="https://concrete-mix-designer.onrender.com/">
 
-<!-- Open Graph -->
-<meta property="og:type" content="website">
-<meta property="og:title"
-      content="Concrete Technology Tools | Mix Design & Admixture Formulation">
-<meta property="og:description"
-      content="Practical concrete technology tools for mix design, admixture formulation, workability and retention analysis.">
-<meta property="og:url"
-      content="https://concrete-mix-designer.onrender.com/">
-<meta property="og:site_name"
-      content="Concrete Technology Tools">
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
 
-<!-- Theme -->
-<meta name="theme-color" content="#0f4c81">
+    <meta property="og:title"
+        content="Concrete Mix Design & Admixture Formulation Tools">
 
-<!-- Favicon -->
-<link rel="icon" type="image/png" href="/logo.png">
+    <meta property="og:description"
+        content="Practical online tools for concrete mix design, IS 10262 calculations, admixture formulation, workability and retention analysis.">
 
-<!-- Structured Data -->
-<script type="application/ld+json">
-{
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-    "name": "Concrete Technology Tools",
-    "url": "https://concrete-mix-designer.onrender.com/",
-    "description": "Web-based tools for concrete mix design, admixture formulation, workability and retention analysis.",
-    "applicationCategory": "EngineeringApplication",
-    "operatingSystem": "Web",
-    "author": {
-        "@type": "Person",
-        "name": "Abhishek Korde"
+    <meta property="og:url"
+        content="https://concrete-mix-designer.onrender.com/">
+
+    <meta property="og:site_name"
+        content="Concrete Technology Tools">
+
+    <!-- Theme -->
+    <meta name="theme-color" content="#0f4c81">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/logo.png">
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Concrete Technology Tools",
+        "url": "https://concrete-mix-designer.onrender.com/",
+        "description": "Web-based tools for concrete mix design, IS 10262 calculations, admixture formulation, workability and retention analysis.",
+        "applicationCategory": "EngineeringApplication",
+        "operatingSystem": "Web",
+        "author": {
+            "@type": "Person",
+            "name": "Abhishek Korde"
+        },
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "INR"
+        }
     }
-}
-</script>
+    </script>
 
-<style>
-    * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-    }
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-    html {
-        scroll-behavior: smooth;
-    }
+        html {
+            scroll-behavior: smooth;
+        }
 
-    body {
-        font-family: Arial, Helvetica, sans-serif;
-        color: #17202a;
-        background: #f5f7fa;
-        line-height: 1.6;
-    }
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            color: #17202a;
+            background: #f5f7fa;
+            line-height: 1.6;
+        }
 
-    a {
-        text-decoration: none;
-    }
+        a {
+            text-decoration: none;
+        }
 
-    /* NAVBAR */
+        /* NAVBAR */
 
-    .navbar {
-        width: 100%;
-        background: #ffffff;
-        border-bottom: 1px solid #e5e7eb;
-        position: sticky;
-        top: 0;
-        z-index: 1000;
-    }
-
-    .nav-container {
-        max-width: 1150px;
-        margin: auto;
-        padding: 14px 22px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-
-    .brand {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        color: #0f4c81;
-        font-size: 20px;
-        font-weight: 700;
-    }
-
-    .brand img {
-        width: 38px;
-        height: 38px;
-        object-fit: contain;
-    }
-
-    .nav-links {
-        display: flex;
-        align-items: center;
-        gap: 24px;
-    }
-
-    .nav-links a {
-        color: #374151;
-        font-size: 14px;
-        font-weight: 600;
-    }
-
-    .nav-links a:hover {
-        color: #0f4c81;
-    }
-
-    .login-btn {
-        background: #0f4c81;
-        color: #ffffff !important;
-        padding: 9px 18px;
-        border-radius: 7px;
-    }
-
-    .login-btn:hover {
-        background: #0b3a63;
-    }
-
-    /* HERO */
-
-    .hero {
-        background:
-            linear-gradient(
-                135deg,
-                #eef5fb 0%,
-                #ffffff 55%,
-                #edf4f9 100%
-            );
-
-        padding: 90px 20px 85px;
-    }
-
-    .hero-container {
-        max-width: 1050px;
-        margin: auto;
-        text-align: center;
-    }
-
-    .hero-badge {
-        display: inline-block;
-        background: #e1edf7;
-        color: #0f4c81;
-        font-size: 13px;
-        font-weight: 700;
-        padding: 7px 14px;
-        border-radius: 20px;
-        margin-bottom: 20px;
-    }
-
-    .hero h1 {
-        font-size: clamp(34px, 5vw, 58px);
-        line-height: 1.12;
-        color: #12263a;
-        margin-bottom: 22px;
-    }
-
-    .hero h1 span {
-        color: #0f4c81;
-    }
-
-    .hero p {
-        max-width: 760px;
-        margin: auto;
-        font-size: 18px;
-        color: #536273;
-    }
-
-    .hero-buttons {
-        margin-top: 32px;
-        display: flex;
-        justify-content: center;
-        gap: 14px;
-        flex-wrap: wrap;
-    }
-
-    .primary-btn,
-    .secondary-btn {
-        display: inline-block;
-        padding: 13px 24px;
-        border-radius: 8px;
-        font-size: 15px;
-        font-weight: 700;
-        transition: 0.2s ease;
-    }
-
-    .primary-btn {
-        background: #0f4c81;
-        color: #ffffff;
-    }
-
-    .primary-btn:hover {
-        background: #0b3a63;
-        transform: translateY(-1px);
-    }
-
-    .secondary-btn {
-        background: #ffffff;
-        color: #0f4c81;
-        border: 1px solid #cbd5df;
-    }
-
-    .secondary-btn:hover {
-        border-color: #0f4c81;
-    }
-
-    /* SECTION */
-
-    .section {
-        padding: 70px 20px;
-    }
-
-    .section-container {
-        max-width: 1100px;
-        margin: auto;
-    }
-
-    .section-heading {
-        text-align: center;
-        margin-bottom: 40px;
-    }
-
-    .section-heading h2 {
-        font-size: 32px;
-        color: #17202a;
-        margin-bottom: 10px;
-    }
-
-    .section-heading p {
-        color: #667085;
-        max-width: 700px;
-        margin: auto;
-    }
-
-    /* TOOLS */
-
-    .tools-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 22px;
-    }
-
-    .tool-card {
-        background: #ffffff;
-        border: 1px solid #e3e8ee;
-        border-radius: 12px;
-        padding: 28px;
-        box-shadow: 0 4px 16px rgba(15, 76, 129, 0.05);
-    }
-
-    .tool-icon {
-        width: 48px;
-        height: 48px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: #eaf2f8;
-        color: #0f4c81;
-        border-radius: 10px;
-        font-size: 23px;
-        margin-bottom: 17px;
-    }
-
-    .tool-card h3 {
-        font-size: 20px;
-        margin-bottom: 9px;
-        color: #17202a;
-    }
-
-    .tool-card p {
-        font-size: 14px;
-        color: #667085;
-    }
-
-    /* ABOUT */
-
-    .about {
-        background: #ffffff;
-    }
-
-    .about-content {
-        max-width: 850px;
-        margin: auto;
-        text-align: center;
-    }
-
-    .about-content p {
-        color: #596575;
-        margin-bottom: 16px;
-        font-size: 16px;
-    }
-
-    /* FEATURES */
-
-    .features-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 20px;
-    }
-
-    .feature {
-        background: #ffffff;
-        padding: 24px;
-        border-radius: 10px;
-        border: 1px solid #e3e8ee;
-    }
-
-    .feature h3 {
-        font-size: 17px;
-        margin-bottom: 7px;
-        color: #17324d;
-    }
-
-    .feature p {
-        font-size: 14px;
-        color: #667085;
-    }
-
-    /* CTA */
-
-    .cta {
-        padding: 70px 20px;
-        background: #0f4c81;
-        color: #ffffff;
-        text-align: center;
-    }
-
-    .cta h2 {
-        font-size: 32px;
-        margin-bottom: 12px;
-    }
-
-    .cta p {
-        max-width: 650px;
-        margin: auto;
-        color: #dceaf5;
-    }
-
-    .cta .primary-btn {
-        margin-top: 25px;
-        background: #ffffff;
-        color: #0f4c81;
-    }
-
-    .cta .primary-btn:hover {
-        background: #f1f5f8;
-    }
-
-    /* FOOTER */
-
-    footer {
-        background: #111827;
-        color: #9ca3af;
-        padding: 30px 20px;
-        text-align: center;
-        font-size: 13px;
-    }
-
-    footer strong {
-        color: #ffffff;
-    }
-
-    /* MOBILE */
-
-    @media (max-width: 800px) {
+        .navbar {
+            width: 100%;
+            background: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
 
         .nav-container {
-            padding: 12px 16px;
+            max-width: 1150px;
+            margin: auto;
+            padding: 14px 22px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
-
-        .nav-links a:not(.login-btn) {
-            display: none;
-        }
-
-        .hero {
-            padding: 65px 18px 60px;
-        }
-
-        .hero p {
-            font-size: 16px;
-        }
-
-        .tools-grid,
-        .features-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .section {
-            padding: 55px 18px;
-        }
-
-        .section-heading h2 {
-            font-size: 27px;
-        }
-
-        .cta h2 {
-            font-size: 27px;
-        }
-    }
-
-    @media (max-width: 450px) {
 
         .brand {
-            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #0f4c81;
+            font-size: 20px;
+            font-weight: 700;
         }
 
         .brand img {
-            width: 32px;
-            height: 32px;
+            width: 38px;
+            height: 38px;
+            object-fit: contain;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .nav-links a {
+            color: #374151;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .nav-links a:hover {
+            color: #0f4c81;
         }
 
         .login-btn {
-            padding: 8px 13px;
-            font-size: 13px !important;
+            background: #0f4c81;
+            color: #ffffff !important;
+            padding: 9px 18px;
+            border-radius: 7px;
+        }
+
+        .login-btn:hover {
+            background: #0b3a63;
+        }
+
+        /* HERO */
+
+        .hero {
+            background:
+                linear-gradient(
+                    135deg,
+                    #eef5fb 0%,
+                    #ffffff 55%,
+                    #edf4f9 100%
+                );
+
+            padding: 90px 20px 85px;
+        }
+
+        .hero-container {
+            max-width: 1050px;
+            margin: auto;
+            text-align: center;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: #e1edf7;
+            color: #0f4c81;
+            font-size: 13px;
+            font-weight: 700;
+            padding: 7px 14px;
+            border-radius: 20px;
+            margin-bottom: 20px;
         }
 
         .hero h1 {
-            font-size: 34px;
+            font-size: clamp(34px, 5vw, 58px);
+            line-height: 1.12;
+            color: #12263a;
+            margin-bottom: 22px;
         }
-    }
-</style>
 
+        .hero h1 span {
+            color: #0f4c81;
+        }
+
+        .hero p {
+            max-width: 800px;
+            margin: auto;
+            font-size: 18px;
+            color: #536273;
+        }
+
+        .hero-buttons {
+            margin-top: 32px;
+            display: flex;
+            justify-content: center;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        .primary-btn,
+        .secondary-btn {
+            display: inline-block;
+            padding: 13px 24px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 700;
+            transition: 0.2s ease;
+        }
+
+        .primary-btn {
+            background: #0f4c81;
+            color: #ffffff;
+        }
+
+        .primary-btn:hover {
+            background: #0b3a63;
+            transform: translateY(-1px);
+        }
+
+        .secondary-btn {
+            background: #ffffff;
+            color: #0f4c81;
+            border: 1px solid #cbd5df;
+        }
+
+        .secondary-btn:hover {
+            border-color: #0f4c81;
+        }
+
+        /* SECTION */
+
+        .section {
+            padding: 70px 20px;
+        }
+
+        .section-container {
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        .section-heading {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .section-heading h2 {
+            font-size: 32px;
+            color: #17202a;
+            margin-bottom: 10px;
+        }
+
+        .section-heading p {
+            color: #667085;
+            max-width: 750px;
+            margin: auto;
+        }
+
+        /* TOOLS */
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 22px;
+        }
+
+        .tool-card {
+            background: #ffffff;
+            border: 1px solid #e3e8ee;
+            border-radius: 12px;
+            padding: 28px;
+            box-shadow: 0 4px 16px rgba(15, 76, 129, 0.05);
+        }
+
+        .tool-icon {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #eaf2f8;
+            color: #0f4c81;
+            border-radius: 10px;
+            font-size: 23px;
+            margin-bottom: 17px;
+        }
+
+        .tool-card h3 {
+            font-size: 20px;
+            margin-bottom: 9px;
+            color: #17202a;
+        }
+
+        .tool-card p {
+            font-size: 14px;
+            color: #667085;
+        }
+
+        .tool-link {
+            display: inline-block;
+            margin-top: 16px;
+            color: #0f4c81;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .tool-link:hover {
+            text-decoration: underline;
+        }
+
+        /* ABOUT */
+
+        .about {
+            background: #ffffff;
+        }
+
+        .about-content {
+            max-width: 850px;
+            margin: auto;
+            text-align: center;
+        }
+
+        .about-content p {
+            color: #596575;
+            margin-bottom: 16px;
+            font-size: 16px;
+        }
+
+        /* INFORMATION SECTION */
+
+        .information {
+            background: #f5f7fa;
+        }
+
+        .information-content {
+            max-width: 900px;
+            margin: auto;
+        }
+
+        .information-content h3 {
+            font-size: 22px;
+            color: #17324d;
+            margin-top: 28px;
+            margin-bottom: 9px;
+        }
+
+        .information-content h3:first-child {
+            margin-top: 0;
+        }
+
+        .information-content p {
+            color: #596575;
+            font-size: 15px;
+            margin-bottom: 14px;
+        }
+
+        /* FEATURES */
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .feature {
+            background: #ffffff;
+            padding: 24px;
+            border-radius: 10px;
+            border: 1px solid #e3e8ee;
+        }
+
+        .feature h3 {
+            font-size: 17px;
+            margin-bottom: 7px;
+            color: #17324d;
+        }
+
+        .feature p {
+            font-size: 14px;
+            color: #667085;
+        }
+
+        /* CTA */
+
+        .cta {
+            padding: 70px 20px;
+            background: #0f4c81;
+            color: #ffffff;
+            text-align: center;
+        }
+
+        .cta h2 {
+            font-size: 32px;
+            margin-bottom: 12px;
+        }
+
+        .cta p {
+            max-width: 650px;
+            margin: auto;
+            color: #dceaf5;
+        }
+
+        .cta .primary-btn {
+            margin-top: 25px;
+            background: #ffffff;
+            color: #0f4c81;
+        }
+
+        .cta .primary-btn:hover {
+            background: #f1f5f8;
+        }
+
+        /* FOOTER */
+
+        footer {
+            background: #111827;
+            color: #9ca3af;
+            padding: 30px 20px;
+            text-align: center;
+            font-size: 13px;
+        }
+
+        footer strong {
+            color: #ffffff;
+        }
+
+        /* MOBILE */
+
+        @media (max-width: 800px) {
+
+            .nav-container {
+                padding: 12px 16px;
+            }
+
+            .nav-links a:not(.login-btn) {
+                display: none;
+            }
+
+            .hero {
+                padding: 65px 18px 60px;
+            }
+
+            .hero p {
+                font-size: 16px;
+            }
+
+            .tools-grid,
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section {
+                padding: 55px 18px;
+            }
+
+            .section-heading h2 {
+                font-size: 27px;
+            }
+
+            .cta h2 {
+                font-size: 27px;
+            }
+        }
+
+        @media (max-width: 450px) {
+
+            .brand {
+                font-size: 16px;
+            }
+
+            .brand img {
+                width: 32px;
+                height: 32px;
+            }
+
+            .login-btn {
+                padding: 8px 13px;
+                font-size: 13px !important;
+            }
+
+            .hero h1 {
+                font-size: 34px;
+            }
+        }
+    </style>
 
 </head>
 
@@ -450,335 +498,503 @@
 <!-- NAVIGATION -->
 
 <header class="navbar">
+
     <div class="nav-container">
 
+        <a href="/" class="brand" aria-label="Concrete Technology Tools home">
 
-    <a href="/" class="brand">
-        <img src="/logo.png" alt="Concrete Technology Tools logo">
-        <span>Concrete Technology Tools</span>
-    </a>
+            <img
+                src="/logo.png"
+                alt="Concrete Technology Tools logo">
 
-    <nav class="nav-links">
-        <a href="#tools">Tools</a>
-        <a href="#about">About</a>
-        <a href="#features">Features</a>
-        <a href="/login.html" class="login-btn">Login</a>
-    </nav>
+            <span>Concrete Technology Tools</span>
 
-</div>
+        </a>
 
+        <nav class="nav-links" aria-label="Main navigation">
+
+            <a href="#tools">Tools</a>
+
+            <a href="#about">About</a>
+
+            <a href="#features">Features</a>
+
+            <a href="/login.html" class="login-btn">
+                Login
+            </a>
+
+        </nav>
+
+    </div>
 
 </header>
 
-<!-- HERO -->
+
+<!-- MAIN CONTENT -->
 
 <main>
 
-<section class="hero">
+    <!-- HERO -->
+
+    <section class="hero">
+
+        <div class="hero-container">
+
+            <div class="hero-badge">
+                CONCRETE TECHNOLOGY & ENGINEERING TOOLS
+            </div>
+
+            <h1>
+                Concrete Mix Design &amp;
+                <span>Admixture Formulation Tools</span>
+            </h1>
+
+            <p>
+                Concrete Technology Tools is a web-based engineering platform
+                designed to support concrete mix design, IS 10262-based
+                calculations, admixture formulation, workability and retention
+                evaluation, and practical concrete trial workflows.
+            </p>
+
+            <div class="hero-buttons">
+
+                <a href="/login.html" class="primary-btn">
+                    Get Started
+                </a>
+
+                <a href="#tools" class="secondary-btn">
+                    Explore Tools
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
 
 
-<div class="hero-container">
+    <!-- TOOLS -->
 
-    <div class="hero-badge">
-        CONCRETE TECHNOLOGY & ENGINEERING TOOLS
-    </div>
+    <section class="section" id="tools">
 
-    <h1>
-        Practical Tools for
-        <span>Concrete Technology</span>
-    </h1>
+        <div class="section-container">
 
-    <p>
-        Concrete Technology Tools is a web-based platform designed to
-        simplify concrete mix design, admixture formulation, workability
-        evaluation and concrete trial analysis for engineers and
-        concrete technology professionals.
-    </p>
+            <div class="section-heading">
 
-    <div class="hero-buttons">
+                <h2>
+                    Concrete Technology Tools
+                </h2>
+
+                <p>
+                    Practical engineering tools for concrete mix design,
+                    admixture development, laboratory trials and RMC
+                    technical workflows.
+                </p>
+
+            </div>
+
+
+            <div class="tools-grid">
+
+
+                <article class="tool-card">
+
+                    <div class="tool-icon">
+                        ▣
+                    </div>
+
+                    <h3>
+                        Concrete Mix Designer
+                    </h3>
+
+                    <p>
+                        Design concrete mixes using an engineering-based
+                        workflow covering concrete grade, material quantities,
+                        aggregate proportions, water-cement ratio and
+                        mix calculations. The tool is developed around the
+                        principles of IS 10262 concrete mix design.
+                    </p>
+
+                    <a
+                        href="/login.html"
+                        class="tool-link"
+                        aria-label="Open Concrete Mix Designer">
+                        Open Mix Designer →
+                    </a>
+
+                </article>
+
+
+                <article class="tool-card">
+
+                    <div class="tool-icon">
+                        ⚗
+                    </div>
+
+                    <h3>
+                        Admixture Formulation Suggester
+                    </h3>
+
+                    <p>
+                        Analyse concrete admixture trial requirements and
+                        generate formulation suggestions based on concrete
+                        grade, PCE chemistry, workability and retention
+                        requirements. Designed to support systematic
+                        formulation development.
+                    </p>
+
+                    <a
+                        href="/login.html"
+                        class="tool-link"
+                        aria-label="Access Admixture Formulation Suggester">
+                        Explore Formulation Tool →
+                    </a>
+
+                </article>
+
+
+                <article class="tool-card">
+
+                    <div class="tool-icon">
+                        ↗
+                    </div>
+
+                    <h3>
+                        Concrete Trial Analysis
+                    </h3>
+
+                    <p>
+                        Organise and evaluate concrete trial observations,
+                        including workability and retention behaviour, to
+                        support formulation development and technical
+                        decision-making.
+                    </p>
+
+                    <a
+                        href="/login.html"
+                        class="tool-link"
+                        aria-label="Access Concrete Trial tools">
+                        Explore Trial Tools →
+                    </a>
+
+                </article>
+
+
+                <article class="tool-card">
+
+                    <div class="tool-icon">
+                        ⚙
+                    </div>
+
+                    <h3>
+                        Engineering Workflow
+                    </h3>
+
+                    <p>
+                        Keep concrete technology calculations and
+                        trial-related information organised in a single
+                        web-based workspace created for practical engineering
+                        applications.
+                    </p>
+
+                    <a
+                        href="/login.html"
+                        class="tool-link"
+                        aria-label="Access Concrete Technology Tools">
+                        Access Platform →
+                    </a>
+
+                </article>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ABOUT -->
+
+    <section class="section about" id="about">
+
+        <div class="section-container">
+
+            <div class="section-heading">
+
+                <h2>
+                    About Concrete Technology Tools
+                </h2>
+
+            </div>
+
+            <div class="about-content">
+
+                <p>
+                    Concrete Technology Tools is a web-based platform
+                    developed to make repetitive concrete technology
+                    calculations and formulation-related workflows easier
+                    to manage.
+                </p>
+
+                <p>
+                    The platform is intended for concrete technologists,
+                    admixture professionals, RMC engineers, laboratory
+                    professionals, civil engineers and students working with
+                    concrete materials and mix development.
+                </p>
+
+                <p>
+                    The objective is to bring practical engineering tools
+                    into one accessible web application rather than relying
+                    on disconnected spreadsheets and manual calculations.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- SEO / INFORMATION SECTION -->
+
+    <section class="section information">
+
+        <div class="section-container">
+
+            <div class="section-heading">
+
+                <h2>
+                    Concrete Mix Design &amp; Admixture Technology
+                </h2>
+
+                <p>
+                    Tools and workflows focused on practical concrete
+                    engineering and laboratory development.
+                </p>
+
+            </div>
+
+
+            <div class="information-content">
+
+                <h3>
+                    Concrete Mix Design
+                </h3>
+
+                <p>
+                    Concrete mix design involves selecting and proportioning
+                    cementitious materials, water, fine aggregate, coarse
+                    aggregate and chemical admixtures to achieve the required
+                    concrete performance. A systematic mix design workflow
+                    helps engineers evaluate material proportions, water-cement
+                    ratio, workability and other project requirements.
+                </p>
+
+
+                <h3>
+                    IS 10262 Concrete Mix Design
+                </h3>
+
+                <p>
+                    IS 10262 provides guidelines for concrete mix proportioning
+                    in India. Concrete engineers and RMC professionals commonly
+                    use mix-design calculations together with laboratory trials
+                    and material-specific adjustments to develop practical
+                    concrete mixes.
+                </p>
+
+
+                <h3>
+                    Concrete Admixture Formulation
+                </h3>
+
+                <p>
+                    Chemical admixture formulation can involve evaluating
+                    different raw materials, PCE components, dosage levels,
+                    workability and retention behaviour. Trial-based analysis
+                    can help concrete technologists develop formulations for
+                    specific materials and performance requirements.
+                </p>
+
+
+                <h3>
+                    Concrete Workability and Retention
+                </h3>
+
+                <p>
+                    Workability and retention are important considerations
+                    when evaluating fresh concrete, particularly for RMC
+                    applications where concrete may need to maintain the
+                    required workability during transportation, placing and
+                    finishing.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- FEATURES -->
+
+    <section class="section" id="features">
+
+        <div class="section-container">
+
+            <div class="section-heading">
+
+                <h2>
+                    Built for Practical Concrete Work
+                </h2>
+
+                <p>
+                    The platform focuses on practical workflows commonly
+                    encountered during concrete development and laboratory
+                    trials.
+                </p>
+
+            </div>
+
+
+            <div class="features-grid">
+
+
+                <div class="feature">
+
+                    <h3>
+                        Concrete Mix Design
+                    </h3>
+
+                    <p>
+                        Work with concrete grades, material quantities,
+                        aggregate proportions and mix-design calculations.
+                    </p>
+
+                </div>
+
+
+                <div class="feature">
+
+                    <h3>
+                        IS 10262 Workflow
+                    </h3>
+
+                    <p>
+                        Support an engineering workflow based on the
+                        principles used for concrete mix proportioning
+                        under IS 10262.
+                    </p>
+
+                </div>
+
+
+                <div class="feature">
+
+                    <h3>
+                        Admixture Development
+                    </h3>
+
+                    <p>
+                        Support PCE-based admixture formulation and
+                        workability-retention development.
+                    </p>
+
+                </div>
+
+
+                <div class="feature">
+
+                    <h3>
+                        Trial-Based Approach
+                    </h3>
+
+                    <p>
+                        Use laboratory and RMC trial observations to
+                        support formulation development and analysis.
+                    </p>
+
+                </div>
+
+
+                <div class="feature">
+
+                    <h3>
+                        Engineering Focus
+                    </h3>
+
+                    <p>
+                        Designed around practical concrete technology
+                        rather than generic calculation workflows.
+                    </p>
+
+                </div>
+
+
+                <div class="feature">
+
+                    <h3>
+                        Web Based
+                    </h3>
+
+                    <p>
+                        Access the platform through a modern web browser
+                        without installing desktop software.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- CTA -->
+
+    <section class="cta">
+
+        <h2>
+            Start Using Concrete Technology Tools
+        </h2>
+
+        <p>
+            Access the platform and explore the available concrete mix
+            design and formulation tools.
+        </p>
 
         <a href="/login.html" class="primary-btn">
-            Get Started
+            Login to Continue
         </a>
 
-        <a href="#tools" class="secondary-btn">
-            Explore Tools
-        </a>
-
-    </div>
-
-</div>
-
-
-</section>
-
-<!-- TOOLS -->
-
-<section class="section" id="tools">
-
-
-<div class="section-container">
-
-    <div class="section-heading">
-
-        <h2>Concrete Technology Tools</h2>
-
-        <p>
-            Engineering-focused tools designed to support practical
-            concrete laboratory, RMC and admixture development work.
-        </p>
-
-    </div>
-
-
-    <div class="tools-grid">
-
-        <article class="tool-card">
-
-            <div class="tool-icon">▣</div>
-
-            <h3>Concrete Mix Designer</h3>
-
-            <p>
-                Design concrete mixes using an engineering-based workflow
-                with provisions for concrete grade, materials, aggregate
-                proportions, water-cement ratio and mix calculations.
-                The tool is developed around the principles of
-                IS 10262 concrete mix design.
-            </p>
-
-        </article>
-
-
-        <article class="tool-card">
-
-            <div class="tool-icon">⚗</div>
-
-            <h3>Admixture Formulation Suggester</h3>
-
-            <p>
-                Analyse concrete admixture trial requirements and generate
-                formulation suggestions based on concrete grade, PCE
-                chemistry, workability and retention requirements.
-                Designed to support systematic formulation development.
-            </p>
-
-        </article>
-
-
-        <article class="tool-card">
-
-            <div class="tool-icon">↗</div>
-
-            <h3>Concrete Trial Analysis</h3>
-
-            <p>
-                Organise and evaluate concrete trial observations,
-                including workability and retention behaviour, to support
-                formulation development and technical decision-making.
-            </p>
-
-        </article>
-
-
-        <article class="tool-card">
-
-            <div class="tool-icon">⚙</div>
-
-            <h3>Engineering Workflow</h3>
-
-            <p>
-                Keep concrete technology calculations and trial-related
-                information organised in a single web-based workspace
-                created for practical engineering applications.
-            </p>
-
-        </article>
-
-    </div>
-
-</div>
-
-
-</section>
-
-<!-- ABOUT -->
-
-<section class="section about" id="about">
-
-
-<div class="section-container">
-
-    <div class="section-heading">
-
-        <h2>About Concrete Technology Tools</h2>
-
-    </div>
-
-    <div class="about-content">
-
-        <p>
-            Concrete Technology Tools is developed to make repetitive
-            concrete technology calculations and formulation-related
-            workflows easier to manage.
-        </p>
-
-        <p>
-            The platform is intended for concrete technologists,
-            admixture professionals, RMC engineers, laboratory
-            professionals, civil engineers and students who work with
-            concrete materials and mix development.
-        </p>
-
-        <p>
-            The objective is to bring practical engineering tools into
-            one accessible web application rather than relying on
-            disconnected spreadsheets and manual calculations.
-        </p>
-
-    </div>
-
-</div>
-
-</section>
-
-<!-- FEATURES -->
-
-<section class="section" id="features">
-
-<div class="section-container">
-
-    <div class="section-heading">
-
-        <h2>Built for Practical Concrete Work</h2>
-
-        <p>
-            The platform focuses on practical workflows commonly
-            encountered during concrete development and laboratory trials.
-        </p>
-
-    </div>
-
-
-    <div class="features-grid">
-
-        <div class="feature">
-
-            <h3>Concrete Mix Design</h3>
-
-            <p>
-                Work with concrete grades, material quantities,
-                aggregate proportions and mix-design calculations.
-            </p>
-
-        </div>
-
-
-        <div class="feature">
-
-            <h3>Admixture Development</h3>
-
-            <p>
-                Support PCE-based admixture formulation and
-                workability-retention development.
-            </p>
-
-        </div>
-
-
-        <div class="feature">
-
-            <h3>Trial-Based Approach</h3>
-
-            <p>
-                Use actual laboratory and RMC trial observations to
-                support formulation development.
-            </p>
-
-        </div>
-
-
-        <div class="feature">
-
-            <h3>Engineering Focus</h3>
-
-            <p>
-                Designed around practical concrete technology rather
-                than generic calculation workflows.
-            </p>
-
-        </div>
-
-
-        <div class="feature">
-
-            <h3>Web Based</h3>
-
-            <p>
-                Access the platform through a modern web browser without
-                installing desktop software.
-            </p>
-
-        </div>
-
-
-        <div class="feature">
-
-            <h3>Continuously Developing</h3>
-
-            <p>
-                New concrete technology tools and analytical capabilities
-                can be added as the platform develops.
-            </p>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-</section>
-
-<!-- CTA -->
-
-<section class="cta">
-
-<h2>Start Using Concrete Technology Tools</h2>
-
-<p>
-    Access the platform and explore the available concrete mix design
-    and formulation tools.
-</p>
-
-<a href="/login.html" class="primary-btn">
-    Login to Continue
-</a>
-
-
-</section>
+    </section>
 
 </main>
+
 
 <!-- FOOTER -->
 
 <footer>
 
+    <p>
+        <strong>
+            Concrete Technology Tools
+        </strong>
+    </p>
 
-<p>
-    <strong>Concrete Technology Tools</strong>
-</p>
+    <p>
+        Developed by Abhishek Korde
+    </p>
 
-<p>
-    Developed by Abhishek Korde
-</p>
-
-<p>
-    © <span id="year"></span> Concrete Technology Tools. All rights reserved.
-</p>
-
+    <p>
+        © <span id="year"></span>
+        Concrete Technology Tools. All rights reserved.
+    </p>
 
 </footer>
+
 
 <script>
     document.getElementById("year").textContent =
@@ -786,4 +1002,5 @@
 </script>
 
 </body>
+
 </html>
